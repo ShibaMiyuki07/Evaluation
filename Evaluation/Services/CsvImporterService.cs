@@ -14,6 +14,8 @@ namespace Evaluation.Services
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 PrepareHeaderForMatch = args => args.Header!.ToLower(),
+                MissingFieldFound = null,
+                HeaderValidated = null
             };
             try
             {

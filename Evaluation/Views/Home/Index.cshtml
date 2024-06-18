@@ -1,8 +1,53 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    IEnumerable<Joueur> liste = (IEnumerable<Joueur>)ViewData["Joueurs"]!;
 }
 
-<form method="post" href="/Home/Index">
+<form metdod="post" href="/Home/Index">
     <input type="text" name="test"/>
     <input type="submit" value="test"/>
 </form>
+
+@* <div>
+    <table>
+        <tr>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Taille</th>
+            <th>Attaquant</th>
+            <th>Milieu</th>
+            <th>Defenseur</th>
+            <th>Gardien</th>
+            <th>Nationalite</th>
+            <th>Club</th>
+            <th>Physique</th>
+            <th>Vitesse</th>
+            <th>Passe</th>
+            <th>Tir</th>
+            <th>Dribble</th>
+            <th>Defense</th>
+            <th>Image</th>
+        </tr>
+        @foreach(var j in liste)
+        {
+            <tr>
+                <td>@j.Nom</td>
+                <td>@j.Prenom</td>
+                <td>@j.Taille</td>
+                <td>@j.Attaquant</td>
+                <td>@j.Milieu</td>
+                <td>@j.Defenseur</td>
+                <td>@j.Gardien</td>
+                <td>@j.Nationalite</td>
+                <td>@j.Club</td>
+                <td>@j.Physique</td>
+                <td>@j.Vitesse</td>
+                <td>@j.Passe</td>
+                <td>@j.Tir</td>
+                <td>@j.Dribble</td>
+                <td>@j.Defense</td>
+                <td>@j.Image</td>
+            </tr>
+        }
+    </table>
+</div> *@

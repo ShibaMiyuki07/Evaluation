@@ -1,5 +1,6 @@
 using Evaluation.Log.Interface;
 using Evaluation.Models;
+using Evaluation.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -17,6 +18,8 @@ namespace Evaluation.Controllers
         public IActionResult Index()
         {
             _logger.LogInfo("Ouverture de l'index");
+            //IEnumerable<Joueur> csv = new CsvImporterService<Joueur>().Import("..\\evaluation_03_2024_donnee - joueurs.csv");
+            //ViewData["Joueurs"] = csv;
             return View();
         }
 
