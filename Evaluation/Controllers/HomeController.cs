@@ -3,6 +3,11 @@ using Evaluation.Models;
 using Evaluation.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web;
 
 namespace Evaluation.Controllers
 {
@@ -34,6 +39,13 @@ namespace Evaluation.Controllers
         //}
         //    return View();
         //}
+
+        [HttpPost]
+        public IActionResult Index(IFormFile file)
+        {
+            Console.WriteLine(file.FileName);
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();

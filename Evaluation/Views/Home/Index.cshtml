@@ -1,11 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    IEnumerable<Joueur> liste = (IEnumerable<Joueur>)ViewData["Joueurs"]!;
+    // IEnumerable<Joueur> liste = (IEnumerable<Joueur>)ViewData["Joueurs"]!;
 }
 
-<form metdod="post" href="/Home/Index">
-    <input type="text" name="test"/>
-    <input type="submit" value="test"/>
+<form method="post" enctype="multipart/form-data" href="/Home/Index">
+    <div><input type="file" name="file" /></div>
+    <input type="submit" value="Ajouter"/>
 </form>
 
 @* <div>
