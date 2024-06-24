@@ -1,4 +1,5 @@
 using Evaluation.Extension;
+using IronPdf.Extensions.Mvc.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,8 @@ builder.Services.AddControllersWithViews();
 
 var config = builder.Configuration;
 builder.Services.ServiceInjection(config);
-
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IRazorViewRenderer, RazorViewRenderer>();
 
 var app = builder.Build();
 

@@ -1,18 +1,28 @@
 using Evaluation.Log.Interface;
 using Evaluation.Models;
+using Evaluation.Services;
+using IronPdf.Extensions.Mvc.Core;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Evaluation.Controllers
 {
-    public class HomeController(ILoggerManager logger) : Controller
+    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer) : Controller
     {
         private readonly ILoggerManager _logger = logger;
+        private readonly IRazorViewRenderer razorViewRenderer = razorViewRenderer;
 
         public async Task<IActionResult> Index()
         {
-            return await Task.Run(() =>
+            return await Task.Run(async() =>
             {
+                //IronPdf.License.LicenseKey = "IRONSUITE.MAMIHERIMANITRA.RAKOTOARISOA.PULSE.MG.28235-FFF220765A-H3A7R-D6L2K33YJDVE-F2ZFRCHMRBIB-ZPLIV2QWNY55-ZJF7JQMHK7IA-OAKXC3THNMTN-QEDLJYQOBOZA-VEKXDK-TT5FXEF4IBKNEA-DEPLOYMENT.TRIAL-TWDSRD.TRIAL.EXPIRES.24.JUL.2024";
+                //PdfService pdf = new(razorViewRenderer);
+
+                //PdfDocument pdfdoc = await pdf.CreatePdf<Constante>("Views/Home/Test.cshtml", null);
+                //Response.Headers.Add("Content-Disposition", "inline");
+
+                //return File(pdfdoc.BinaryData, "application/pdf","test.pdf");
                 return View();
             });
             /*
