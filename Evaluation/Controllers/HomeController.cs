@@ -9,8 +9,12 @@ namespace Evaluation.Controllers
     {
         private readonly ILoggerManager _logger = logger;
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            return await Task.Run(() =>
+            {
+                return View();
+            });
             //IEnumerable<Joueur> csv = new CsvImporterService<Joueur>().Import("..\\evaluation_03_2024_donnee - joueurs.csv");
             //ViewData["Joueurs"] = csv;
 
@@ -18,7 +22,6 @@ namespace Evaluation.Controllers
             //Response.Headers.Add("Content-Disposition", "inline");
             //return File(pdf.BinaryData, "application/pdf", "viewToPdfMVCCore.pdf");
 
-            return View();
         }
 
 
@@ -42,15 +45,21 @@ namespace Evaluation.Controllers
         //    return View();
         //}
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Privacy()
         {
-            return View();
+            return await Task.Run(() =>
+            {
+                return View();
+            });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public async Task<IActionResult> Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return await Task.Run(() =>
+            {
+                return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            });
         }
     }
 }
