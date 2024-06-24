@@ -11,20 +11,20 @@ using System.Web;
 
 namespace Evaluation.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(ILoggerManager logger) : Controller
     {
-        private readonly ILoggerManager _logger;
-
-        public HomeController(ILoggerManager logger)
-        {
-            _logger = logger;
-        }
+        private readonly ILoggerManager _logger = logger;
 
         public IActionResult Index()
         {
             _logger.LogInfo("Ouverture de l'index");
             //IEnumerable<Joueur> csv = new CsvImporterService<Joueur>().Import("..\\evaluation_03_2024_donnee - joueurs.csv");
             //ViewData["Joueurs"] = csv;
+
+            //Test file return from controller
+            //Response.Headers.Add("Content-Disposition", "inline");
+            //return File(pdf.BinaryData, "application/pdf", "viewToPdfMVCCore.pdf");
+
             return View();
         }
 
