@@ -15,15 +15,17 @@ namespace Evaluation.Controllers
             {
                 return View();
             });
+            /*
             //IEnumerable<Joueur> csv = new CsvImporterService<Joueur>().Import("..\\evaluation_03_2024_donnee - joueurs.csv");
             //ViewData["Joueurs"] = csv;
 
             //Test file return from controller
             //Response.Headers.Add("Content-Disposition", "inline");
             //return File(pdf.BinaryData, "application/pdf", "viewToPdfMVCCore.pdf");
+            */
         }
 
-
+        /*
         //Exemple pour l'insertion des données
         //[HttpPost]
         //public IActionResult Index(User m)
@@ -43,7 +45,7 @@ namespace Evaluation.Controllers
         //    Console.WriteLine(file.FileName);
         //    return View();
         //}
-
+        */
         public async Task<IActionResult> Privacy()
         {
             return await Task.Run(() =>
