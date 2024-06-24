@@ -33,13 +33,14 @@ namespace Evaluation.Services
 
         public IEnumerable<T> ImportFromIFormFile(IFormFile file)
         {
+
             if (file == null || file.Length == 0)
             {
                 throw new ArgumentException("No file uploaded or file is empty");
             }
             try
             {
-                using (var stream = file.OpenReadStream())
+                var stream = file.OpenReadStream();
                 using (var reader = new StreamReader(stream))
                 {
                     var csv = new CsvReader(reader, config);

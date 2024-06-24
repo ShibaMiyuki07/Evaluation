@@ -40,12 +40,14 @@ namespace Evaluation.Controllers
         //    return View();
         //}
 
-        [HttpPost]
-        public IActionResult Index(IFormFile file)
-        {
-            Console.WriteLine(file.FileName);
-            return View();
-        }
+
+        //Exemple retrieving file
+        //[HttpPost]
+        //public IActionResult Index(IFormFile file)
+        //{
+        //    Console.WriteLine(file.FileName);
+        //    return View();
+        //}
         public IActionResult Privacy()
         {
             return View();

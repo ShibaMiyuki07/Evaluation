@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\eval\\Evaluation\\Evaluation\\Evaluation.csproj": {}
+    "D:\\exercice\\Evaluation\\Evaluation\\Evaluation.csproj": {}
   },
   "projects": {
-    "D:\\eval\\Evaluation\\Evaluation\\Evaluation.csproj": {
+    "D:\\exercice\\Evaluation\\Evaluation\\Evaluation.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\eval\\Evaluation\\Evaluation\\Evaluation.csproj",
+        "projectUniqueName": "D:\\exercice\\Evaluation\\Evaluation\\Evaluation.csproj",
         "projectName": "Evaluation",
-        "projectPath": "D:\\eval\\Evaluation\\Evaluation\\Evaluation.csproj",
-        "packagesPath": "C:\\Users\\RIVO\\.nuget\\packages\\",
-        "outputPath": "D:\\eval\\Evaluation\\Evaluation\\obj\\",
+        "projectPath": "D:\\exercice\\Evaluation\\Evaluation\\Evaluation.csproj",
+        "packagesPath": "C:\\Users\\mamiherimanitra.rako\\.nuget\\packages\\",
+        "outputPath": "D:\\exercice\\Evaluation\\Evaluation\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\RIVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mamiherimanitra.rako\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -34,6 +35,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -42,7 +48,7 @@
           "dependencies": {
             "CsvHelper": {
               "target": "Package",
-              "version": "[33.0.0, )"
+              "version": "[33.0.1, )"
             },
             "EFCore.BulkExtensions": {
               "target": "Package",
@@ -96,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
