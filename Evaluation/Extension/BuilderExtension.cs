@@ -13,7 +13,7 @@ namespace Evaluation.Extension
             InjectServices(services); 
             InjectBdd(services,configuration);
             InjectLog(services);
-            LogManager.Setup().LoadConfigurationFromXml("nlog.config");
+            LogManager.Setup().LoadConfigurationFromFile("./nlog.config");
             return services;
         }
         public static void InjectServices(this IServiceCollection services)

@@ -5,7 +5,7 @@ namespace Evaluation.Log
 {
     public class LoggerManager : ILoggerManager
     {
-        private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public void LogDebug(string message) => logger.Debug(message);
 
         public void LogError(string message) => logger.Error(message);
