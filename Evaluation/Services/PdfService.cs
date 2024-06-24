@@ -7,6 +7,7 @@ namespace Evaluation.Services
 
         private readonly IRazorViewRenderer _viewRenderService = razorViewRenderer;
 
+        #region CreatePdf
         public async Task<PdfDocument> CreatePdf<T>(string viewName,T objet)
         {
             return await Task.Run(() =>
@@ -16,5 +17,6 @@ namespace Evaluation.Services
                 return pdf;
             });
         }
+        #endregion
     }
 }

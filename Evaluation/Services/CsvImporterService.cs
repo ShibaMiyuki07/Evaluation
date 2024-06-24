@@ -19,9 +19,10 @@ namespace Evaluation.Services
             HeaderValidated = null
         };
 
-        public async Task<IEnumerable<T>> Import(string filename)
+        #region ImportFromFileName
+        public async Task<IEnumerable<T>> ImportFromFileName(string filename)
         {
-            return await Task.Run(() => {
+            return await Task.Run(async () => {
                 try
                 {
                     using (var fs = new StreamReader(filename))
@@ -45,7 +46,9 @@ namespace Evaluation.Services
                 return line!;
             });
         }
+        #endregion
 
+        #region ImportFromIFormFile
         public async Task<IEnumerable<T>> ImportFromIFormFile(IFormFile file)
         {
             return await Task.Run(async () => {
@@ -79,7 +82,9 @@ namespace Evaluation.Services
                 return line!;
             });
         }
+        #endregion
 
+        #region RetrieveCsv
         private async Task<IEnumerable<T>> RetrieveCsv(StreamReader reader)
         {
             return await Task.Run(() => {
@@ -88,5 +93,6 @@ namespace Evaluation.Services
                 return line;
             });
         }
+        #endregion
     }
 }
