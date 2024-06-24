@@ -19,63 +19,72 @@ namespace Evaluation.Services
             HeaderValidated = null
         };
 
-        public IEnumerable<T> Import(string filename)
+        public async Task<IEnumerable<T>> Import(string filename)
         {
-            try
-            {
-                using (var fs = new StreamReader(filename))
+            return await Task.Run(() => {
+                try
                 {
-                    var csv = new CsvReader(fs, config);
-                    line = csv.GetRecords<T>().ToList();
+                    using (var fs = new StreamReader(filename))
+                    {
+                        line = RetrieveCsv(fs);
+                    }
+                    if (!line.Any())
+                    {
+                        throw new IEnumerableException("La liste est vide");
+                    }
                 }
-                if (!line.Any())
+                catch (IEnumerableException ex)
                 {
-                    throw new IEnumerableException("La liste est vide");
+                    ErrorModel.HandleError(_logger, ex, "CsvImporterService", "Import");
                 }
-            }
-            catch(IEnumerableException ex)
-            {
-                ErrorModel.HandleError(_logger, ex, "CsvImporterService", "Import");
-            }
-            catch (Exception ex)
-            {
-                ErrorModel.HandleError(_logger, ex, "CsvImporterService", "Import");
-            }
-            
-            return line!;
+                catch (Exception ex)
+                {
+                    ErrorModel.HandleError(_logger, ex, "CsvImporterService", "Import");
+                }
+
+                return line!;
+            });
         }
 
-        public IEnumerable<T> ImportFromIFormFile(IFormFile file)
+        public async Task<IEnumerable<T>> ImportFromIFormFile(IFormFile file)
         {
-            try
-            {
-                if (file == null || file.Length == 0)
+            return await Task.Run(() => {
+                try
                 {
-                    throw new ArgumentException("No file uploaded or file is empty");
+                    if (file == null || file.Length == 0)
+                    {
+                        throw new ArgumentException("No file uploaded or file is empty");
+                    }
+                    var stream = file.OpenReadStream();
+                    using (var reader = new StreamReader(stream))
+                    {
+                        line = RetrieveCsv(reader);
+                    }
+
+                    if (!line.Any()) throw new IEnumerableException("La liste est vide");
                 }
-                var stream = file.OpenReadStream();
-                using (var reader = new StreamReader(stream))
+                catch (IEnumerableException ex)
                 {
-                    var csv = new CsvReader(reader, config);
-                    line = csv.GetRecords<T>().ToList();
+                    ErrorModel.HandleError(_logger, ex, "CsvImporterService", "ImportFromIFormFile");
+                }
+                catch (ArgumentException ex)
+                {
+                    ErrorModel.HandleError(_logger, ex, "CsvImporterService", "ImportFromIFormFile");
+                }
+                catch (Exception ex)
+                {
+                    ErrorModel.HandleError(_logger, ex, "CsvImporterService", "ImportFromIFormFile");
                 }
 
-                if (!line.Any()) throw new IEnumerableException("La liste est vide");
-            }
-            catch (IEnumerableException ex)
-            {
-                ErrorModel.HandleError(_logger,ex, "CsvImporterService", "ImportFromIFormFile");
-            }
-            catch (ArgumentException ex)
-            {
-                ErrorModel.HandleError(_logger, ex, "CsvImporterService", "ImportFromIFormFile");
-            }
-            catch (Exception ex)
-            {
-                ErrorModel.HandleError(_logger, ex, "CsvImporterService", "ImportFromIFormFile");
-            }
+                return line!;
+            });
+        }
 
-            return line!;
+        private IEnumerable<T> RetrieveCsv(StreamReader reader)
+        {
+            var csv = new CsvReader(reader, config);
+            line = csv.GetRecords<T>().ToList();
+            return line;
         }
     }
 }
