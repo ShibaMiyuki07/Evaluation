@@ -26,7 +26,7 @@ namespace Evaluation.Services
                 {
                     using (var fs = new StreamReader(filename))
                     {
-                        line = RetrieveCsv(fs);
+                        line = await RetrieveCsv(fs);
                     }
                     if (!line.Any())
                     {
@@ -48,7 +48,7 @@ namespace Evaluation.Services
 
         public async Task<IEnumerable<T>> ImportFromIFormFile(IFormFile file)
         {
-            return await Task.Run(() => {
+            return await Task.Run(async () => {
                 try
                 {
                     if (file == null || file.Length == 0)
@@ -58,7 +58,7 @@ namespace Evaluation.Services
                     var stream = file.OpenReadStream();
                     using (var reader = new StreamReader(stream))
                     {
-                        line = RetrieveCsv(reader);
+                        line = await RetrieveCsv(reader);
                     }
 
                     if (!line.Any()) throw new IEnumerableException("La liste est vide");
@@ -80,11 +80,13 @@ namespace Evaluation.Services
             });
         }
 
-        private IEnumerable<T> RetrieveCsv(StreamReader reader)
+        private async Task<IEnumerable<T>> RetrieveCsv(StreamReader reader)
         {
-            var csv = new CsvReader(reader, config);
-            line = csv.GetRecords<T>().ToList();
-            return line;
+            return await Task.Run(() => {
+                var csv = new CsvReader(reader, config);
+                line = csv.GetRecords<T>().ToList();
+                return line;
+            });
         }
     }
 }

@@ -21,7 +21,6 @@ namespace Evaluation.Controllers
             //Test file return from controller
             //Response.Headers.Add("Content-Disposition", "inline");
             //return File(pdf.BinaryData, "application/pdf", "viewToPdfMVCCore.pdf");
-
         }
 
 
