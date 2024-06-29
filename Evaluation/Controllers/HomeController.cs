@@ -1,16 +1,18 @@
 using Evaluation.Log.Interface;
 using Evaluation.Models;
 using Evaluation.Services;
+using EvaluationClasse;
 using IronPdf.Extensions.Mvc.Core;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Evaluation.Controllers
 {
-    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer) : Controller
+    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer,IHttpContextAccessor httpContextAccessor) : Controller
     {
         private readonly ILoggerManager _logger = logger;
         private readonly IRazorViewRenderer razorViewRenderer = razorViewRenderer;
+        private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
 
         public async Task<IActionResult> Index()
         {
@@ -36,6 +38,20 @@ namespace Evaluation.Controllers
             */
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Login(Admin admin)
+        {
+            if(admin.Mdp == null && admin.Mdp == string.Empty) 
+            { 
+                try
+                {
+                    if(Utils.CheckEmail(admin.Login))
+                    {
+                        return View();
+                    }
+                }
+            }
+        }
         /*
         //Exemple pour l'insertion des données
         //[HttpPost]
