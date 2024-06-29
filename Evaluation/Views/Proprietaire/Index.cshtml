@@ -1,0 +1,28 @@
+﻿@using EvaluationClasse
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    IEnumerable<Bien> liste = (IEnumerable<Bien>)ViewData["liste_bien"]!;
+}
+<html>
+    <head></head>
+    <body>
+        @if(liste != null)
+    {
+        <table>
+            <tr>
+                <th>Nom</th>
+                <th>Loyer</th>
+            </tr>
+            @foreach(var l in liste)
+            {
+                <tr>
+                    <td>@l.Nombien</td>
+                    <td>@l.Loyer</td>
+                </tr>
+            }
+        </table>
+    }
+</body>
+</html>

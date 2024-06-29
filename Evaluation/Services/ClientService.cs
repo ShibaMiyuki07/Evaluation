@@ -21,5 +21,10 @@ namespace Evaluation.Services
             Client? cl = await _context.Clients.Where(c => c.Numeroclient == admin.Login).FirstOrDefaultAsync()!;
             return cl!;
         }
+
+        public async Task<Client?> GetClientByIdAsync(string idclient)
+        {
+            return await _context.Clients.Where(c => c.Idclient == idclient).FirstOrDefaultAsync()!;
+        }
     }
 }

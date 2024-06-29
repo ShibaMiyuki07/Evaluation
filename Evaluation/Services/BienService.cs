@@ -18,5 +18,10 @@ namespace Evaluation.Services
 		{
 			return await EvaluationsContext.Biens.Where(c => c.Idproprietaire == client.Idclient).ToListAsync();
 		}
+
+		public async Task<IEnumerable<Bien>> SelectBienProprietaireWithLocation(Client client)
+		{
+			return await EvaluationsContext.Biens.Include(c => c.Locations).Include(c => c.Idtypebien).Where(c => c.Idproprietaire == client.Idclient).ToListAsync() ;
+		}
 	}
 }
