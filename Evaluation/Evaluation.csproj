@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Admin\" />
     <Folder Include="Views\Client\" />
     <Folder Include="Views\Proprietaire\" />
   </ItemGroup>

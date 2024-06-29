@@ -46,26 +46,26 @@ namespace Evaluation.Controllers
         {
             if(admin.Mdp == null || admin.Mdp == string.Empty) 
             {
-                #region Proprietaire
+                #region Client
                 try
                 {
                     if(Utils.CheckEmail(admin.Login!))
                     {
                         Client proprietaire = await ClientService.GetClientByEmail(admin);
                         _contextAccessor.HttpContext!.Session.SetString("id", proprietaire.Idclient);
-                        return RedirectToAction("Index","Proprietaire");
+                        return RedirectToAction("Index","Client");
                     }
                 }
                 catch(Exception ex) { _logger.LogError($"Home.Login : {ex.Message} - {ex.StackTrace}"); }
                 #endregion
-                #region Client
+                #region Proprietaire
                 try
                 {
                     if (Utils.CheckNumero(admin.Login!)) 
                     {
                         Client client = await ClientService.GetClientByNumero(admin);
                         _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
-                        return RedirectToAction("Index","Client");
+                        return RedirectToAction("Index","Proprietaire");
                     }
                 }
                 catch (Exception ex) { _logger.LogError($"Home.Login : {ex.Message} - {ex.StackTrace}"); }
