@@ -24,7 +24,7 @@ namespace Evaluation.Extension
 
         public static void InjectBdd(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<PsqlContext>(
+            services.AddDbContext<EvaluationsContext>(
                 options => options.UseNpgsql(configuration.GetConnectionString("Psql")!));
         }
 
