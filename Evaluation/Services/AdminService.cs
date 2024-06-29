@@ -15,5 +15,22 @@ namespace Evaluation.Services
             return await _evaluationContext.Admins.Where(a => a.Login ==  admin.Login && a.Mdp == admin.Mdp).FirstOrDefaultAsync()!;
         }
 
+        public async Task DeleteAll()
+        {
+            _evaluationContext.Database.ExecuteSqlRaw("alter sequence idadmin minvalue 0 restart with 1 ;");
+            _evaluationContext.Database.ExecuteSqlRaw("alter sequence idbien minvalue 0 restart with 1 ;");
+            _evaluationContext.Database.ExecuteSqlRaw("alter sequence idtypebien minvalue 0 restart with 1 ;");
+            _evaluationContext.Database.ExecuteSqlRaw("alter sequence idclient minvalue 0 restart with 1 ;");
+            _evaluationContext.Database.ExecuteSqlRaw("alter sequence idlocation minvalue 0 restart with 1 ;");
+
+
+            _evaluationContext.Database.ExecuteSqlRaw("delete from paye;");
+            _evaluationContext.Database.ExecuteSqlRaw("delete from location;");
+            _evaluationContext.Database.ExecuteSqlRaw("delete from biens;");
+            _evaluationContext.Database.ExecuteSqlRaw("delete from client;");
+            _evaluationContext.Database.ExecuteSqlRaw("delete from typebien;");
+            await _evaluationContext.SaveChangesAsync();
+        }
+
     }
 }

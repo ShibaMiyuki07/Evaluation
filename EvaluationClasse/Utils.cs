@@ -87,24 +87,35 @@ namespace EvaluationClasse
             List<Tuple<int, string, decimal>> retour = [];
             List<Tuple<int, string>> mois = Constante.mois;
 
-            IEnumerable<MoisGain> LocationDateDebut = locations.GroupBy(l => l.Datedebut!.Value!.Month).Select(x => new MoisGain { Mois = x.Key, Amount = x.Sum(l => (decimal)l.IdbienNavigation!.Loyer!)}).ToList();
+            IEnumerable<MoisGain> LocationDateDebut = locations.GroupBy(l => l.Datedebut!.Value!.Month).Select(x => new MoisGain { Mois = x.Key, Amount = x.Sum(l => (decimal)l.IdbienNavigation!.Loyer!*(decimal)l.IdbienNavigation.IdtypebienNavigation!.Commission!)/100}).ToList();
             for(int i=0; i<mois.Count;i++)
             {
                 MoisGain MoisGain = LocationDateDebut.Where(x => x.Mois == mois[i].Item1).FirstOrDefault()!;
-                Location MoisEnCours = locations.Where(x => (x.Datedebut!.Value.Month < mois[i].Item1 && (x.Datedebut.Value!.AddMonths((int) x.Duree).Month - mois[i].Item1 >0))).FirstOrDefault()!;
+
+                /*
+                    Get All A Payer (datedebut + duree) - mois > 0
+                 */
+                IEnumerable<Location> MoisEnCours = locations.Where(x => (x.Datedebut!.Value.Month < mois[i].Item1 && (x.Datedebut.Value!.AddMonths((int) x.Duree).Month - mois[i].Item1 >0))).ToList()!;
                 
                 decimal to_add = 0;
-                if(MoisEnCours == null && MoisGain != null)
+                if(!MoisEnCours.Any() && MoisGain != null)
                 {
                     to_add = MoisGain.Amount;
                 }
-                else if(MoisGain == null&& MoisEnCours != null)
+                else if(MoisGain == null&& MoisEnCours.Any())
                 {
-                    to_add = (decimal)MoisEnCours.IdbienNavigation!.Loyer!;
+                    foreach(Location location in MoisEnCours)
+                    {
+                        to_add += ((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!)/100;
+                    }
                 }
-                else if(MoisEnCours != null && MoisGain != null)
+                else if(MoisEnCours.Any() && MoisGain != null)
                 {
-                    to_add = (decimal)MoisEnCours.IdbienNavigation!.Loyer! + MoisGain.Amount;
+                    foreach(Location location in MoisEnCours)
+                    {
+                        to_add += (decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!/100;
+                    }
+                    to_add += MoisGain.Amount;
                 }
                 retour.Add(new Tuple<int, string, decimal>(mois[i].Item1, mois[i].Item2,to_add));
             }

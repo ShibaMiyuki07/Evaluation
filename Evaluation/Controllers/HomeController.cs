@@ -51,14 +51,22 @@ namespace Evaluation.Controllers
                     #region Client
                     if (Utils.CheckEmail(admin.Login!))
                     {
-                        retour = await HomeToClient(admin);
+                        try
+                        {
+                            retour = await HomeToClient(admin);
+                        }
+                        catch (Exception ex) { }
                     }
                     #endregion
 
                     #region Proprietaire
                     if (Utils.CheckNumero(admin.Login!))
                     {
-                        retour = await HomeToProprietaire(admin);
+                        try
+                        {
+                            retour = await HomeToProprietaire(admin);
+                        }
+                        catch(Exception ex) { }
                     }
                     #endregion
                 }
@@ -92,7 +100,11 @@ namespace Evaluation.Controllers
         public async Task<IActionResult> HomeToProprietaire(Admin admin)
         {
             Client client = await ClientService.GetClientByNumero(admin);
-            _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
+           try
+            {
+                _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
+            }
+            catch (Exception ex) { throw; }
             return RedirectToAction("Index", "Proprietaire");
         }
         #endregion
@@ -101,7 +113,11 @@ namespace Evaluation.Controllers
         public async Task<IActionResult> HomeToClient(Admin admin)
         {
             Client client = await ClientService.GetClientByEmail(admin);
-            _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
+            try
+            {
+                _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
+            }
+            catch (Exception ex) { throw; }
             return RedirectToAction("Index", "Client");
         }
         #endregion
@@ -134,6 +150,16 @@ namespace Evaluation.Controllers
             return await Task.Run(() =>
             {
                 return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            });
+        }
+
+
+        public async Task<IActionResult> Logout()
+        {
+            return await Task.Run(IActionResult() =>
+            {
+                _contextAccessor.HttpContext!.Session.Remove("id");
+                return RedirectToAction("Index", "Home");
             });
         }
     }

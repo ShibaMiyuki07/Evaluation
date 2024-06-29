@@ -5,11 +5,17 @@ create sequence idclient;
 create sequence idlocation;
 create sequence idpaye;
 
-alter sequence idadmin minvalue 0 restart with 0 ;
-alter sequence idbien minvalue 0 restart with 0;
-alter sequence idtypebien minvalue 0 restart with 0;
-alter sequence idclient minvalue 0 restart with 0;
-alter sequence idlocation minvalue 0 restart with 0;
+alter sequence idadmin minvalue 0 restart with 1 ;
+alter sequence idbien minvalue 0 restart with 1;
+alter sequence idtypebien minvalue 0 restart with 1;
+alter sequence idclient minvalue 0 restart with 1;
+alter sequence idlocation minvalue 0 restart with 1;
+
+delete from client;
+delete from typebien;
+delete from biens;
+delete from location;
+delete from paye;
 
 
 create table admin(idadmin char(10) primary key default concat('AD00',nextval('idadmin')),login char(50),mdp char(20));
@@ -40,6 +46,8 @@ insert into biens(nombien,description,region,loyer,photos,idproprietaire,idtypeb
 insert into location(idclient,duree,datedebut,idbien) values('C002',3,'2024-01-01','B001');
 
 insert into location(idclient,duree,datedebut,idbien) values('C002',4,'2024-06-01','B001');
+
+insert into location(idclient,duree,datedebut,idbien) values('C003',6,'2024-02-01','B002');
 
 insert into paye(idlocation,moispaye,anneepaye) values('L001','01','2024');
 

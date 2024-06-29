@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evaluation.Controllers
 {
-    public class AdminController(IHttpContextAccessor httpContextAccessor, ILocationService LocationService) : Controller
+    public class AdminController(IHttpContextAccessor httpContextAccessor, ILocationService LocationService,IAdminService adminService) : Controller
     {
         private readonly IHttpContextAccessor ContextAccessor = httpContextAccessor;
         private readonly ILocationService LocationService = LocationService;
+        private readonly IAdminService adminService = adminService;
 
 
         //Chiffre d'affaire = location totale
@@ -45,7 +46,11 @@ namespace Evaluation.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(DateOnly debut,DateOnly fin)
         {
-			IEnumerable<Location> locations = await LocationService.SelectByDateDebut(debut);
+            if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            IEnumerable<Location> locations = await LocationService.SelectByDateDebut(debut);
 
 			decimal TotalChiffreAffaireFiltre = Utils.ChiffreAffaireFiltre(locations,debut,fin);
 			ViewData["TotalChiffreAffaire"] = TotalChiffreAffaireFiltre;
@@ -63,6 +68,16 @@ namespace Evaluation.Controllers
             ViewData["ChiffreSansCommission"] = chiffresanscommission;
 			return View("Index", ViewData);
 		}
+
+        public async Task<IActionResult> DeleteAll()
+        {
+            if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            await adminService.DeleteAll();
+            return RedirectToAction("Index","Home");
+        }
 
     }
 }
