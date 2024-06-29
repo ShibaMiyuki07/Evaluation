@@ -62,6 +62,8 @@ namespace Evaluation.Controllers
                 {
                     if (Utils.CheckNumero(admin.Login!)) 
                     {
+                        Client client = await ClientService.GetClientByNumero(admin);
+                        HttpContext.Session.SetString("id", client.Idclient);
                         return View();
                     }
                 }
