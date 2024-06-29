@@ -1,8 +1,14 @@
-﻿<html>
+﻿@{
+	decimal chiffre = (decimal) ViewData["total"]!;
+}
+<html>
 	<head>
 		<title>Chiffre d'affaire</title>
 	</head>
 	<body>
-
-	</body>
+		@if(chiffre != null)
+		{
+			<div>Chiffre d'affaire actuel = @chiffre Ar</div>
+		}
+</body>
 </html>

@@ -5,7 +5,7 @@ using Evaluation.Models;
 using Evaluation.Models.Exceptions;
 using System.Globalization;
 
-namespace Evaluation.Services
+namespace Evaluation.Services.Utile
 {
     public class CsvImporterService<T>(ILoggerManager logger)
     {
@@ -22,7 +22,8 @@ namespace Evaluation.Services
         #region ImportFromFileName
         public async Task<IEnumerable<T>> ImportFromFileName(string filename)
         {
-            return await Task.Run(async () => {
+            return await Task.Run(async () =>
+            {
                 try
                 {
                     using (var fs = new StreamReader(filename))
@@ -51,7 +52,8 @@ namespace Evaluation.Services
         #region ImportFromIFormFile
         public async Task<IEnumerable<T>> ImportFromIFormFile(IFormFile file)
         {
-            return await Task.Run(async () => {
+            return await Task.Run(async () =>
+            {
                 try
                 {
                     if (file == null || file.Length == 0)
@@ -87,7 +89,8 @@ namespace Evaluation.Services
         #region RetrieveCsv
         private async Task<IEnumerable<T>> RetrieveCsv(StreamReader reader)
         {
-            return await Task.Run(() => {
+            return await Task.Run(() =>
+            {
                 var csv = new CsvReader(reader, config);
                 line = csv.GetRecords<T>().ToList();
                 return line;
