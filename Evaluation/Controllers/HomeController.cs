@@ -53,7 +53,7 @@ namespace Evaluation.Controllers
                     {
                         Client proprietaire = await ClientService.GetClientByEmail(admin);
                         _contextAccessor.HttpContext!.Session.SetString("id", proprietaire.Idclient);
-                        return View();
+                        return RedirectToAction("Index","Proprietaire");
                     }
                 }
                 catch(Exception ex) { _logger.LogError($"Home.Login : {ex.Message} - {ex.StackTrace}"); }
@@ -65,7 +65,7 @@ namespace Evaluation.Controllers
                     {
                         Client client = await ClientService.GetClientByNumero(admin);
                         _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
-                        return View();
+                        return RedirectToAction("Index","Client");
                     }
                 }
                 catch (Exception ex) { _logger.LogError($"Home.Login : {ex.Message} - {ex.StackTrace}"); }
@@ -81,8 +81,8 @@ namespace Evaluation.Controllers
             else
             {
                 _contextAccessor.HttpContext!.Session.SetString("id", admin.Idadmin);
+                return RedirectToAction("Index","Admin");
             }
-            return View();
             #endregion
         }
         /*
