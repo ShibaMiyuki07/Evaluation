@@ -5,7 +5,12 @@ VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evaluation", "Evaluation\Evaluation.csproj", "{60B12C50-3293-43D9-927E-31462C5C03B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvaluationClasse", "EvaluationClasse\EvaluationClasse.csproj", "{60DC8259-275D-4E59-B55B-10C3D145C628}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaluationClasse", "EvaluationClasse\EvaluationClasse.csproj", "{60DC8259-275D-4E59-B55B-10C3D145C628}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{B86C5615-284A-4E31-94E0-EC7D64D00CBB}"
+	ProjectSection(SolutionItems) = preProject
+		script.sql = script.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

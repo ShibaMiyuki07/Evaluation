@@ -16,6 +16,19 @@ create table biens(idbien char(10) primary key default concat('B00',nextval('idb
 create table location(idlocation char(10) primary key default concat('L00',nextval('idlocation')),idclient char(10),duree int,datedebut date,idbien char(10),foreign key(idclient) references client(idclient),foreign key(idbien) references biens(idbien));
 
 
+insert into admin(login,mdp) values('test','test');
+insert into client(numeroclient) values('0347001943');
+insert into client(emailclient) values('test@test.mg');
+insert into client(emailclient) values('test2@test.mg');
+
+insert into typebien(type,commission) values('maison','10'),('appartement','12'),('villa','15'),('immeuble','20');
+
+insert into biens(nombien,description,region,loyer,photos,idproprietaire,idtypebien) values('test1','test1','region1','140000','','C002','T001');
+
+insert into biens(nombien,description,region,loyer,photos,idproprietaire,idtypebien) values('test2','test2','region2','1200000','','C003','T004');
+
+
+
 delete from client;
 delete from typebien;
 delete from biens;

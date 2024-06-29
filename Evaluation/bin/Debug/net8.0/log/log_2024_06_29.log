@@ -1,0 +1,2 @@
+2024-06-29 08:53:30.7599|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 33
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52

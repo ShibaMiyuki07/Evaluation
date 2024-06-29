@@ -34,7 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Interface\" />
+    <Folder Include="Views\Client\" />
+    <Folder Include="Views\Proprietaire\" />
   </ItemGroup>
 
   <ItemGroup>

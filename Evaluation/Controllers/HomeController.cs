@@ -1,16 +1,21 @@
 using Evaluation.Log.Interface;
 using Evaluation.Models;
 using Evaluation.Services;
+using Evaluation.Services.Interface;
+using EvaluationClasse;
 using IronPdf.Extensions.Mvc.Core;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Evaluation.Controllers
 {
-    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer) : Controller
+    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer,IHttpContextAccessor httpContextAccessor,IClientService clientService,IAdminService adminService) : Controller
     {
         private readonly ILoggerManager _logger = logger;
         private readonly IRazorViewRenderer razorViewRenderer = razorViewRenderer;
+        private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
+        private readonly IClientService ClientService = clientService;
+        private readonly IAdminService AdminService = adminService;
 
         public async Task<IActionResult> Index()
         {
@@ -36,6 +41,50 @@ namespace Evaluation.Controllers
             */
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Login(Admin admin)
+        {
+            if(admin.Mdp == null || admin.Mdp == string.Empty) 
+            {
+                #region Client
+                try
+                {
+                    if(Utils.CheckEmail(admin.Login!))
+                    {
+                        Client proprietaire = await ClientService.GetClientByEmail(admin);
+                        _contextAccessor.HttpContext!.Session.SetString("id", proprietaire.Idclient);
+                        return RedirectToAction("Index","Client");
+                    }
+                }
+                catch(Exception ex) { _logger.LogError($"Home.Login : {ex.Message} - {ex.StackTrace}"); }
+                #endregion
+                #region Proprietaire
+                try
+                {
+                    if (Utils.CheckNumero(admin.Login!)) 
+                    {
+                        Client client = await ClientService.GetClientByNumero(admin);
+                        _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
+                        return RedirectToAction("Index","Proprietaire");
+                    }
+                }
+                catch (Exception ex) { _logger.LogError($"Home.Login : {ex.Message} - {ex.StackTrace}"); }
+                #endregion
+            }
+            #region Admin
+            admin = await AdminService.GetAdminAsync(admin);
+            if(admin == null || admin.Idadmin == string.Empty || admin.Idadmin == null)
+            {
+                ViewData["erreur"] = "Identifiant inexistant";
+                return View("Index");
+            }
+            else
+            {
+                _contextAccessor.HttpContext!.Session.SetString("id", admin.Idadmin);
+                return RedirectToAction("Index","Admin");
+            }
+            #endregion
+        }
         /*
         //Exemple pour l'insertion des données
         //[HttpPost]
