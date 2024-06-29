@@ -21,7 +21,7 @@ namespace Evaluation.Controllers
             string t = HttpContextAccessor.HttpContext!.Session.GetString("id")!;
             Client? proprietaire = await ClientService.GetClientByIdAsync(t)!;
 			IEnumerable<Bien> liste_bien = await BienService.SelectBienByProprietaireAsync(proprietaire!);
-            ViewData["list"] = liste_bien;
+            ViewData["liste_bien"] = liste_bien;
             return View();
         }
     }
