@@ -8,6 +8,53 @@ namespace EvaluationClasse
 {
     public class Utils
     {
+
+        public static decimal ChiffreAffaireCommission(IEnumerable<Location> locations,bool avecDuree = true)
+        {
+            decimal retour = 0;
+            foreach (Location location in locations)
+            {
+                if (avecDuree)
+                {
+                    retour += (decimal)((((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!) / 100) * location.Duree)!;
+                }
+                else retour += ((((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!) / 100))!;
+
+			}
+            return retour;
+        }
+
+        public static List<Tuple<int,string,decimal>> ChiffreAffaireCommissionParMois(IEnumerable<Location> locations)
+        {
+            List<Tuple<int,string,decimal>> retour = [];
+            List<Tuple<int, string>> mois = Constante.mois;
+            for (int i = 0;i<mois.Count;i++)
+            {
+                decimal chiffre_mois = 0;
+                IEnumerable<Location> liste_mois = locations.Where(l => l.Datedebut!.Value.Month == mois[i].Item1).ToList();
+                chiffre_mois += ChiffreAffaireCommission(liste_mois,false);
+                IEnumerable<Location> liste_en_cours = locations.Where(l => ((l.Datedebut!.Value.Month + l.Duree) > mois[i].Item1) && l.Datedebut!.Value.Month != mois[i].Item1).ToList();
+                chiffre_mois += ChiffreAffaireCommission(liste_en_cours, false);
+
+                retour.Add(new Tuple<int,string, decimal>(mois[i].Item1,mois[i].Item2,chiffre_mois));
+            }
+            return retour;
+        }
+
+        public static List<Tuple<int,string,decimal>> ChiffreAffaireFiltreMois(List<Tuple<int,string,decimal>> listemois,DateOnly debut,DateOnly fin)
+        {
+            List<Tuple<int, string, decimal>> retour = [];
+
+			foreach (var l in listemois)
+            {
+                if(l.Item1 >= debut.Month && l.Item1 <= fin.Month)
+                {
+                    retour.Add(l);
+                }
+            }
+            return retour;
+        }
+
         private static int CountArobase(string str)
         {
             return str!.ToCharArray().Count(c => c == '@');

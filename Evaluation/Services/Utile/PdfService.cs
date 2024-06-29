@@ -1,5 +1,5 @@
 ﻿using IronPdf.Extensions.Mvc.Core;
-namespace Evaluation.Services
+namespace Evaluation.Services.Utile
 {
     public class PdfService(IRazorViewRenderer razorViewRenderer)
     {
@@ -7,7 +7,7 @@ namespace Evaluation.Services
         private readonly IRazorViewRenderer _viewRenderService = razorViewRenderer;
 
         #region CreatePdf
-        public async Task<PdfDocument> CreatePdf<T>(string viewName,T objet)
+        public async Task<PdfDocument> CreatePdf<T>(string viewName, T objet)
         {
             return await Task.Run(() =>
             {

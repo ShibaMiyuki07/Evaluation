@@ -4,6 +4,12 @@ create sequence idtypebien;
 create sequence idclient;
 create sequence idlocation;
 
+alter sequence idadmin minvalue 0 restart with 0 ;
+alter sequence idbien minvalue 0 restart with 0;
+alter sequence idtypebien minvalue 0 restart with 0;
+alter sequence idclient minvalue 0 restart with 0;
+alter sequence idlocation minvalue 0 restart with 0;
+
 
 create table admin(idadmin char(10) primary key default concat('AD00',nextval('idadmin')),login char(50),mdp char(20));
 
@@ -20,12 +26,19 @@ insert into admin(login,mdp) values('test','test');
 insert into client(numeroclient) values('0347001943');
 insert into client(emailclient) values('test@test.mg');
 insert into client(emailclient) values('test2@test.mg');
+insert into client(numeroclient) values('0384124196');
 
 insert into typebien(type,commission) values('maison','10'),('appartement','12'),('villa','15'),('immeuble','20');
 
-insert into biens(nombien,description,region,loyer,photos,idproprietaire,idtypebien) values('test1','test1','region1','140000','','C002','T001');
+insert into biens(nombien,description,region,loyer,photos,idproprietaire,idtypebien) values('test1','test1','region1','140000','','C001','T001');
 
-insert into biens(nombien,description,region,loyer,photos,idproprietaire,idtypebien) values('test2','test2','region2','1200000','','C003','T004');
+insert into biens(nombien,description,region,loyer,photos,idproprietaire,idtypebien) values('test2','test2','region2','1200000','','C004','T004');
+
+
+insert into location(idclient,duree,datedebut,idbien) values('C002',3,'2024-01-01','B001');
+
+
+
 
 
 
