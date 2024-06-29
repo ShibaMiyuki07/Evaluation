@@ -1,4 +1,6 @@
 ﻿using Evaluation.Context;
+using Evaluation.Services.Interface;
+using EvaluationClasse;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evaluation.Controllers
@@ -6,16 +8,18 @@ namespace Evaluation.Controllers
     public class AdminController : Controller
     {
         private readonly IHttpContextAccessor ContextAccessor;
-        private readonly EvaluationsContext EvaluationContext;
+        private readonly ILocationService LocationService;
 
-        public AdminController(IHttpContextAccessor httpContextAccessor, EvaluationsContext evaluationContext)
+        public AdminController(IHttpContextAccessor httpContextAccessor, ILocationService LocationService)
         {
             ContextAccessor = httpContextAccessor;
-            EvaluationContext = evaluationContext;
+            this.LocationService = LocationService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            
+            IEnumerable<Location> locations = await LocationService.SelectAllAsync();
+            decimal totalChiffre = Utils.ChiffreAffaireCommission(locations);
+            ViewData["total"] = totalChiffre;
             return View();
         }
     }
