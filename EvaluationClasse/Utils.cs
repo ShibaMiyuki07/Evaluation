@@ -32,9 +32,9 @@ namespace EvaluationClasse
             {
                 decimal chiffre_mois = 0;
                 IEnumerable<Location> liste_mois = locations.Where(l => l.Datedebut!.Value.Month == mois[i].Item1).ToList();
-                chiffre_mois += ChiffreAffaireCommission(locations,false);
-                IEnumerable<Location> liste_en_cours = locations.Where(l => (l.Datedebut!.Value.Month + l.Duree) <= mois[i].Item1).ToList();
-                chiffre_mois += ChiffreAffaireCommission(locations, false);
+                chiffre_mois += ChiffreAffaireCommission(liste_mois,false);
+                IEnumerable<Location> liste_en_cours = locations.Where(l => ((l.Datedebut!.Value.Month + l.Duree) > mois[i].Item1) && l.Datedebut!.Value.Month != mois[i].Item1).ToList();
+                chiffre_mois += ChiffreAffaireCommission(liste_en_cours, false);
 
                 retour.Add(new Tuple<string, decimal>(mois[i].Item2,chiffre_mois));
             }

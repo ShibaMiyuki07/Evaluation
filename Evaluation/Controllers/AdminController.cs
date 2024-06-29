@@ -17,9 +17,9 @@ namespace Evaluation.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            if(ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
+            if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
             {
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             IEnumerable<Location> locations = await LocationService.SelectAllAsync();
             decimal totalChiffre = Utils.ChiffreAffaireCommission(locations);

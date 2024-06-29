@@ -1,14 +1,25 @@
 ﻿@{
 	decimal chiffre = (decimal) ViewData["total"]!;
+	List<Tuple<string, decimal>> chiffremois = (List<Tuple<string, decimal>>)ViewData["chiffreparmois"]!;
 }
 <html>
 	<head>
 		<title>Chiffre d'affaire</title>
 	</head>
 	<body>
+		<h1>Chiffre d'affaire Mada-Immo</h1>
 		@if(chiffre != null)
 		{
 			<div>Chiffre d'affaire actuel = @chiffre Ar</div>
+		}
+		@if(chiffremois != null)
+		{
+			<ul>
+			@foreach (var t in chiffremois)
+			{
+				<li>@t.Item1 : @t.Item2 Ar</li>
+			}
+			</ul>
 		}
 </body>
 </html>
