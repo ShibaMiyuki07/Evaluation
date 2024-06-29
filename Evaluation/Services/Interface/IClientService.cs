@@ -6,5 +6,7 @@ namespace Evaluation.Services.Interface
     {
         public Task<Client> GetClientByEmail(Admin admin);
         public Task<Client> GetClientByNumero(Admin admin);
-    }
+        public Task<Client?> GetClientByIdAsync(string idclient);
+
+	}
 }

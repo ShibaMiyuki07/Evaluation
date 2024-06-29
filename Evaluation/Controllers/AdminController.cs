@@ -22,21 +22,26 @@ namespace Evaluation.Controllers
                 return RedirectToAction("Index", "Home");
             }
             IEnumerable<Location> locations = await LocationService.SelectAllAsync();
-            decimal totalChiffre = Utils.ChiffreAffaireCommission(locations);
-            ViewData["total"] = totalChiffre;
-            List<Tuple<int,string,decimal>> chiffreparmois = Utils.ChiffreAffaireCommissionParMois(locations);
-            ViewData["chiffreparmois"] = chiffreparmois;
+
+            decimal chiffreAffaire = Utils.ChiffreAffaire(locations);
+            ViewData["chiffreaffaire"] = chiffreAffaire;
+            decimal totalGain = Utils.GainCommission(locations);
+            ViewData["gainTotal"] = totalGain;
+            List<Tuple<int,string,decimal>> GainParMois = Utils.GainCommissionParMois(locations);
+            ViewData["gainparmois"] = GainParMois;
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> Index(DateOnly debut,DateOnly fin)
         {
 			IEnumerable<Location> locations = await LocationService.SelectAllAsync();
-			decimal totalChiffre = Utils.ChiffreAffaireCommission(locations);
-			ViewData["total"] = totalChiffre;
-			List<Tuple<int,string, decimal>> chiffreparmois = Utils.ChiffreAffaireCommissionParMois(locations);
-			chiffreparmois = Utils.ChiffreAffaireFiltreMois(chiffreparmois,debut,fin);
-			ViewData["chiffreparmois"] = chiffreparmois;
+			decimal chiffreAffaire = Utils.ChiffreAffaire(locations);
+			ViewData["chiffreaffaire"] = chiffreAffaire;
+			decimal totalGain = Utils.GainCommission(locations);
+			ViewData["gainTotal"] = totalGain;
+			List<Tuple<int, string, decimal>> GainParMois = Utils.GainCommissionParMois(locations);
+			GainParMois = Utils.GainCommissionFiltreMois(GainParMois, debut,fin);
+			ViewData["gainparmois"] = GainParMois;
 			return View("Index", ViewData);
 		}
 

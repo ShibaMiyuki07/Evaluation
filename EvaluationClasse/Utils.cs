@@ -9,7 +9,17 @@ namespace EvaluationClasse
     public class Utils
     {
 
-        public static decimal ChiffreAffaireCommission(IEnumerable<Location> locations,bool avecDuree = true)
+        public static decimal ChiffreAffaire(IEnumerable<Location> locations)
+        {
+            decimal retour = 0;
+            foreach (Location location in locations)
+            {
+                retour += (decimal)((decimal)location.IdbienNavigation!.Loyer! * location.Duree)!;
+            }
+            return retour;
+        }
+
+        public static decimal GainCommission(IEnumerable<Location> locations,bool avecDuree = true)
         {
             decimal retour = 0;
             foreach (Location location in locations)
@@ -24,7 +34,7 @@ namespace EvaluationClasse
             return retour;
         }
 
-        public static List<Tuple<int,string,decimal>> ChiffreAffaireCommissionParMois(IEnumerable<Location> locations)
+        public static List<Tuple<int,string,decimal>> GainCommissionParMois(IEnumerable<Location> locations)
         {
             List<Tuple<int,string,decimal>> retour = [];
             List<Tuple<int, string>> mois = Constante.mois;
@@ -32,16 +42,16 @@ namespace EvaluationClasse
             {
                 decimal chiffre_mois = 0;
                 IEnumerable<Location> liste_mois = locations.Where(l => l.Datedebut!.Value.Month == mois[i].Item1).ToList();
-                chiffre_mois += ChiffreAffaireCommission(liste_mois,false);
+                chiffre_mois += GainCommission(liste_mois,false);
                 IEnumerable<Location> liste_en_cours = locations.Where(l => ((l.Datedebut!.Value.Month + l.Duree) > mois[i].Item1) && l.Datedebut!.Value.Month != mois[i].Item1).ToList();
-                chiffre_mois += ChiffreAffaireCommission(liste_en_cours, false);
+                chiffre_mois += GainCommission(liste_en_cours, false);
 
                 retour.Add(new Tuple<int,string, decimal>(mois[i].Item1,mois[i].Item2,chiffre_mois));
             }
             return retour;
         }
 
-        public static List<Tuple<int,string,decimal>> ChiffreAffaireFiltreMois(List<Tuple<int,string,decimal>> listemois,DateOnly debut,DateOnly fin)
+        public static List<Tuple<int,string,decimal>> GainCommissionFiltreMois(List<Tuple<int,string,decimal>> listemois,DateOnly debut,DateOnly fin)
         {
             List<Tuple<int, string, decimal>> retour = [];
 
