@@ -21,8 +21,11 @@ namespace Evaluation.Controllers
             decimal chiffreAffaire = Utils.ChiffreAffaire(locations);
             ViewData["chiffreaffaire"] = chiffreAffaire;
             decimal totalGain = Utils.GainCommission(locations);
-            ViewData["gainTotal"] = totalGain;
+            ViewData["gainTotal"] = decimal.Round(totalGain,2);
             List<Tuple<int,string,decimal>> GainParMois = Utils.GainCommissionParMois(locations);
+            
+            decimal chiffresanscommission = Math.Abs(totalGain - chiffreAffaire);
+            ViewData["gainSansCommission"] = chiffresanscommission;
             ViewData["gainparmois"] = GainParMois;
             return View();
         }
@@ -36,6 +39,9 @@ namespace Evaluation.Controllers
 			ViewData["gainTotal"] = totalGain;
 			List<Tuple<int, string, decimal>> GainParMois = Utils.GainCommissionParMois(locations);
 			GainParMois = Utils.GainCommissionFiltreMois(GainParMois, debut,fin);
+
+            decimal chiffresanscommission = Math.Abs(totalGain - chiffreAffaire);
+            ViewData["gainSansCommission"] = chiffresanscommission;
 			ViewData["gainparmois"] = GainParMois;
 			return View("Index", ViewData);
 		}

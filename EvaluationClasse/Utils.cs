@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -76,13 +78,14 @@ namespace EvaluationClasse
             int duree = 0;
             for(int i=debut.Month;i<=fin.Month;i++)
             {
-                if(duree <= d)
+                if(duree < d)
                 {
                     duree++;
                 }
             }
             return duree;
         }
+
 
         public static decimal CalculChiffreAffaire(IEnumerable<Location> location,DateOnly fin)
         {
@@ -113,31 +116,53 @@ namespace EvaluationClasse
             }
             return retour;
         }
-
-        public static List<Tuple<string,Location,string>> Payes(IEnumerable<Location> locations,Dictionary<string,Dictionary<int,Dictionary<int,string>>> paye,DateOnly fin)
+        public static List<Tuple<string,Location,string>> Payes(IEnumerable<Location> locations,Dictionary<string,Dictionary<int,Dictionary<int,string>>> paye,DateOnly debut,DateOnly fin)
         {
             List<Tuple<string,Location, string>> retour = [];
             foreach (var location in locations)
             {
-                int duree = Duree(location.Datedebut!.Value, fin,(int)location.Duree!);
+                DateOnly final = location.Datedebut!.Value.AddMonths((int)location.Duree!);
+                int duree = 0;
+                SetDuree(location, debut, fin, final);
+                duree = Duree(location.Datedebut!.Value, fin, (int)location.Duree!);
                 for(int i=0;i<duree; i++)
                 {
-                    string status = "Non Paye";
-                    if(paye.ContainsKey(location.Idlocation))
-                    {
-                        if (paye[location.Idlocation].ContainsKey(location.Datedebut.Value.Year))
-                        {
-                            if (paye[location.Idlocation][location.Datedebut.Value.Year].ContainsKey(location.Datedebut.Value.Month))
-                            {
-                                status = paye[location.Idlocation][location.Datedebut.Value.Year][location.Datedebut.Value.Month];
-                            }
-                        }
-                    }
-                    retour.Add(new Tuple<string,Location, string>(Constante.mois[location.Datedebut.Value.Month].Item2,location, status));
+                    string status = getStatus(location,paye);
+                    
+                    retour.Add(new Tuple<string,Location, string>(Constante.mois[location.Datedebut.Value.Month-1].Item2,location, status));
                     location.Datedebut = location.Datedebut.Value.AddMonths(1);
                 }
             }
             return retour;
+        }
+
+        public static void SetDuree(Location location,DateOnly debut,DateOnly fin,DateOnly final)
+        {
+            if (location.Datedebut < debut && debut < final)
+            {
+                location.Datedebut = debut;
+                if (final < fin)
+                {
+                    location.Duree = (final.Month - debut.Month);
+                }
+                else { location.Duree = (debut.Month - fin.Month); }
+            }
+        }
+
+        public static string getStatus(Location location, Dictionary<string, Dictionary<int, Dictionary<int, string>>> paye)
+        {
+            string status = "Non Payé";
+            if (paye.ContainsKey(location.Idlocation))
+            {
+                if (paye[location.Idlocation].ContainsKey(location.Datedebut!.Value.Year))
+                {
+                    if (paye[location.Idlocation][location.Datedebut.Value.Year].ContainsKey(location.Datedebut.Value.Month))
+                    {
+                        status = paye[location.Idlocation][location.Datedebut.Value.Year][location.Datedebut.Value.Month];
+                    }
+                }
+            }
+            return status;
         }
         #endregion
 

@@ -13,6 +13,7 @@ namespace Evaluation.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (_HttpContextAccessor.HttpContext!.Session.GetString("id") == null) return RedirectToAction("Index", "Home");
             return await Task.Run(() =>
             {
                 return View();
@@ -28,7 +29,7 @@ namespace Evaluation.Controllers
             IEnumerable<Paye> liste_paye = await _PayeService.SelectByClientAsync(client!);
             Dictionary<string, Dictionary<int, Dictionary<int, string>>> dicPaye = Utils.ListPayeToDictionnary(liste_paye);
             IEnumerable<Location> locations = await _LocationService.SerlectByIdAndDebut(client!,debut);
-            List<Tuple<string,Location, string>> final = Utils.Payes(locations,dicPaye,fin);
+            List<Tuple<string,Location, string>> final = Utils.Payes(locations,dicPaye,debut,fin);
             ViewData["liste_final"] = final;
             return View("Index");
         }

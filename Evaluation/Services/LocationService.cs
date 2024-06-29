@@ -21,7 +21,7 @@ namespace Evaluation.Services
 
         public async Task<IEnumerable<Location>> SerlectByIdAndDebut(Client client,DateOnly debut)
         {
-            return await EvaluationsContext.Locations.Where(c => c.Idclient == client.Idclient && c.Datedebut >= debut).ToListAsync();
+            return await EvaluationsContext.Locations.Include(c => c.IdbienNavigation).Where(c => c.Idclient == client.Idclient && (c.Datedebut >= debut || c.Datedebut!.Value.AddMonths((int)c.Duree!) >= debut)).ToListAsync();
         }
     }
 }
