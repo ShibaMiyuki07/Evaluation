@@ -44,25 +44,30 @@ namespace Evaluation.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(Admin admin)
         {
-            if(admin.Login != null)
+            IActionResult retour = null;
+            if (admin.Login != null)
             {
                 if (admin.Mdp == null || admin.Mdp == string.Empty)
                 {
                     #region Client
                     if (Utils.CheckEmail(admin.Login!))
                     {
-                        await HomeToClient(admin);
+                        retour = await HomeToClient(admin);
                     }
                     #endregion
 
                     #region Proprietaire
                     if (Utils.CheckNumero(admin.Login!))
                     {
-                        await HomeToProprietaire(admin);
+                        retour = await HomeToProprietaire(admin);
                     }
                     #endregion
                 }
 
+                if(retour!= null)
+                {
+                    return retour;
+                }
                 #region Admin
                 admin = await AdminService.GetAdminAsync(admin);
                 if (admin == null || admin.Idadmin == string.Empty || admin.Idadmin == null)

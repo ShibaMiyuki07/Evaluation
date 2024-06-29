@@ -1,12 +1,27 @@
-﻿<html>
+﻿@using EvaluationClasse
+@{
+	List<Tuple<string,Location, string>> listes = (List<Tuple<string,Location, string>>)ViewData["liste_final"]!;
+}
+
+<html>
 	<head>
 		<title>Client</title>
 	</head>
 	<body>
-		<form>
+		<form action="/Client/Loyer" method="post">
 			<input type="date" name="debut"/>
 			<input type="date" name="fin"/>
 			<input type="submit" value="Valider"/>
 		</form>
-	</body>
+		@if(listes != null)
+		{
+			<div>Loyer : </div>
+			<ul>
+			@foreach (var l in listes)
+			{
+				<li>@l.Item1/@l.Item2.Datedebut.Value.Year - @l.Item3</li>
+			}
+			</ul>
+		}
+</body>
 </html>

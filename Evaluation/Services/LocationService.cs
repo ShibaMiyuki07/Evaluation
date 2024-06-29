@@ -5,14 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Evaluation.Services
 {
-    public class LocationService : ILocationService
+    public class LocationService(EvaluationsContext evaluationsContext) : ILocationService
     {
-        private readonly EvaluationsContext EvaluationsContext;
+        private readonly EvaluationsContext EvaluationsContext = evaluationsContext;
 
-        public LocationService(EvaluationsContext evaluationsContext)
-        {
-            EvaluationsContext = evaluationsContext;
-        }
         public async Task<IEnumerable<Location>> SelectAllAsync()
         {
             return await EvaluationsContext.Locations.Include(c => c.IdbienNavigation).ThenInclude(c => c!.IdtypebienNavigation).ToListAsync();
@@ -23,28 +19,9 @@ namespace Evaluation.Services
             return await EvaluationsContext.Locations.Include(c => c.IdbienNavigation).ThenInclude(c => c.IdtypebienNavigation).Where(c => c.Datedebut >= debut && c.IdbienNavigation!.Idproprietaire == proprietaire.Idclient).ToListAsync();
         }
 
-        //public async Task<decimal> ChiffreAffaire(DateOnly debut,DateOnly fin)
-        //{
-        //    decimal retour = 0;
-        //    IEnumerable<Location> locations = await this.SelectWithFiltre(debut);
-        //    foreach (Location location in locations)
-        //    {
-        //        decimal a_ajouter = 0;
-        //        int duree = 0;
-        //        for(int i = location.Datedebut!.Value.Month; i <= fin.Month; i++)
-        //        {
-        //            i++;
-        //        }
-        //        a_ajouter =(decimal) (location.IdbienNavigation!.Loyer!-Commission(location))*duree;
-
-        //        retour += a_ajouter;
-        //    }
-        //    return retour;
-        //}
-
-        //public decimal Commission(Location location)
-        //{
-        //    return (decimal)(location.IdbienNavigation!.Loyer! * location.IdbienNavigation.IdtypebienNavigation!.Commission!) / 100;
-        //}
+        public async Task<IEnumerable<Location>> SerlectByIdAndDebut(Client client,DateOnly debut)
+        {
+            return await EvaluationsContext.Locations.Where(c => c.Idclient == client.Idclient && c.Datedebut >= debut).ToListAsync();
+        }
     }
 }

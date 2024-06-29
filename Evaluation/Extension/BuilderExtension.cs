@@ -24,6 +24,7 @@ namespace Evaluation.Extension
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IBienService, BienService>();
+            services.AddScoped<IPayeService, PayeService>();
         }
 
 

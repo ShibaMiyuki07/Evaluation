@@ -5,16 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evaluation.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController(IHttpContextAccessor httpContextAccessor, ILocationService LocationService) : Controller
     {
-        private readonly IHttpContextAccessor ContextAccessor;
-        private readonly ILocationService LocationService;
+        private readonly IHttpContextAccessor ContextAccessor = httpContextAccessor;
+        private readonly ILocationService LocationService = LocationService;
 
-        public AdminController(IHttpContextAccessor httpContextAccessor, ILocationService LocationService)
-        {
-            ContextAccessor = httpContextAccessor;
-            this.LocationService = LocationService;
-        }
         public async Task<IActionResult> Index()
         {
             if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
