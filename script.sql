@@ -3,6 +3,7 @@ create sequence idbien;
 create sequence idtypebien;
 create sequence idclient;
 create sequence idlocation;
+create sequence idpaye;
 
 alter sequence idadmin minvalue 0 restart with 0 ;
 alter sequence idbien minvalue 0 restart with 0;
@@ -21,6 +22,7 @@ create table biens(idbien char(10) primary key default concat('B00',nextval('idb
 
 create table location(idlocation char(10) primary key default concat('L00',nextval('idlocation')),idclient char(10),duree int,datedebut date,idbien char(10),foreign key(idclient) references client(idclient),foreign key(idbien) references biens(idbien));
 
+create table paye(idpaye char(10) primary key default concat('P00',nextval('idpaye')),idlocation char(10),moispaye int,anneepaye int, foreign key(idlocation) references location(idlocation));
 
 insert into admin(login,mdp) values('test','test');
 insert into client(numeroclient) values('0347001943');
@@ -36,6 +38,8 @@ insert into biens(nombien,description,region,loyer,photos,idproprietaire,idtypeb
 
 
 insert into location(idclient,duree,datedebut,idbien) values('C002',3,'2024-01-01','B001');
+
+insert into paye(idlocation,moispaye,anneepaye) values('L001','01','2024');
 
 
 

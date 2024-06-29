@@ -4,19 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evaluation.Controllers
 {
-    public class ProprietaireController : Controller
+    public class ProprietaireController(IBienService bienService, IHttpContextAccessor httpContextAccessor, IClientService clientService, ILocationService location) : Controller
     {
-        private readonly IBienService BienService;
-        private readonly IHttpContextAccessor HttpContextAccessor;
-        private readonly IClientService ClientService;
-        private readonly ILocationService LocationService;
-        public ProprietaireController(IBienService bienService,IHttpContextAccessor httpContextAccessor,IClientService clientService,ILocationService location)
-        {
-            BienService = bienService;
-            HttpContextAccessor = httpContextAccessor;
-            ClientService = clientService;
-            LocationService = location;
-        }
+        private readonly IBienService BienService = bienService;
+        private readonly IHttpContextAccessor HttpContextAccessor = httpContextAccessor;
+        private readonly IClientService ClientService = clientService;
+        private readonly ILocationService LocationService = location;
+
         public async Task<IActionResult> Index()
         {
             if(HttpContextAccessor.HttpContext!.Session.GetString("id") == null) return RedirectToAction("Index","Home");

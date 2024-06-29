@@ -18,4 +18,6 @@ public partial class Location
     public virtual Bien? IdbienNavigation { get; set; }
 
     public virtual Client? IdclientNavigation { get; set; }
+
+    public virtual ICollection<Paye> Payes { get; set; } = new List<Paye>();
 }

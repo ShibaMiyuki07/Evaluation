@@ -5,16 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Evaluation.Services
 {
-	public class BienService : IBienService
+	public class BienService(EvaluationsContext evaluationsContext) : IBienService
 	{
-		private readonly EvaluationsContext EvaluationsContext;
+		private readonly EvaluationsContext EvaluationsContext = evaluationsContext;
 
-		public BienService(EvaluationsContext evaluationsContext)
-		{
-			EvaluationsContext = evaluationsContext;
-		}
-
-		public async Task<IEnumerable<Bien>> SelectBienByProprietaireAsync(Client client)
+        public async Task<IEnumerable<Bien>> SelectBienByProprietaireAsync(Client client)
 		{
 			return await EvaluationsContext.Biens.Where(c => c.Idproprietaire == client.Idclient).ToListAsync();
 		}

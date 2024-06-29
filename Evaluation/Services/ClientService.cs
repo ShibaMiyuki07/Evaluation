@@ -5,10 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Evaluation.Services
 {
-    public class ClientService : IClientService
+    public class ClientService(EvaluationsContext evaluationsContext) : IClientService
     {
-        private readonly EvaluationsContext _context;
-        public ClientService(EvaluationsContext evaluationsContext) { _context = evaluationsContext; }
+        private readonly EvaluationsContext _context = evaluationsContext;
 
         public async Task<Client> GetClientByEmail(Admin admin)
         {

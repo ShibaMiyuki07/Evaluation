@@ -8,5 +8,8 @@ namespace Evaluation.Services.Interface
 
         public Task<IEnumerable<Location>> SelectWithFiltre(DateOnly debut, Client proprietaire);
 
-	}
+        public Task<IEnumerable<Location>> SerlectByIdAndDebut(Client client, DateOnly debut);
+
+
+    }
 }

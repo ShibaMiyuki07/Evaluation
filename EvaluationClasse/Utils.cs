@@ -65,18 +65,21 @@ namespace EvaluationClasse
             return retour;
         }
 
-		#region Utils Bien
+		#region Utils Location
 		public static decimal Commission(Bien bien)
         {
             return (decimal)(bien.Loyer! * bien.IdtypebienNavigation!.Commission!)/ 100;
         }
 
-        public static int Duree(DateOnly debut,DateOnly fin)
+        public static int Duree(DateOnly debut,DateOnly fin,int d)
         {
             int duree = 0;
             for(int i=debut.Month;i<=fin.Month;i++)
             {
-                duree++;
+                if(duree <= d)
+                {
+                    duree++;
+                }
             }
             return duree;
         }
@@ -86,13 +89,59 @@ namespace EvaluationClasse
             decimal retour = 0;
             foreach (var bien in location)
             {
-                retour += (decimal)((bien.IdbienNavigation!.Loyer - Commission(bien.IdbienNavigation)) * Duree((DateOnly)bien.Datedebut!,fin))!;
+                retour += (decimal)((bien.IdbienNavigation!.Loyer - Commission(bien.IdbienNavigation)) * Duree((DateOnly)bien.Datedebut!,fin,(int)bien.Duree!))!;
             }
             return retour;
         }
-		#endregion
+        #endregion
 
-		private static int CountArobase(string str)
+        #region Utils Paye
+        /*
+            Change la liste des paye en dictionnaire
+         */
+        public static Dictionary<string, Dictionary<int, Dictionary<int, string>>> ListPayeToDictionnary(IEnumerable<Paye> liste)
+        {
+            Dictionary<string, Dictionary<int, Dictionary<int, string>>> retour = [];
+            foreach(Paye paye in liste)
+            {
+                if(!retour.ContainsKey(paye.Idlocation))
+                {
+                    retour[paye.Idlocation] = [];
+                }
+                Dictionary<int, string> last = new Dictionary<int, string> { { (int)paye.Moispaye!, "Paye" } };
+                retour[paye.Idlocation!].Add((int)paye.Anneepaye!, last );
+            }
+            return retour;
+        }
+
+        public static List<Tuple<string,Location,string>> Payes(IEnumerable<Location> locations,Dictionary<string,Dictionary<int,Dictionary<int,string>>> paye,DateOnly fin)
+        {
+            List<Tuple<string,Location, string>> retour = [];
+            foreach (var location in locations)
+            {
+                int duree = Duree(location.Datedebut!.Value, fin,(int)location.Duree!);
+                for(int i=0;i<duree; i++)
+                {
+                    string status = "Non Paye";
+                    if(paye.ContainsKey(location.Idlocation))
+                    {
+                        if (paye[location.Idlocation].ContainsKey(location.Datedebut.Value.Year))
+                        {
+                            if (paye[location.Idlocation][location.Datedebut.Value.Year].ContainsKey(location.Datedebut.Value.Month))
+                            {
+                                status = paye[location.Idlocation][location.Datedebut.Value.Year][location.Datedebut.Value.Month];
+                            }
+                        }
+                    }
+                    retour.Add(new Tuple<string,Location, string>(Constante.mois[location.Datedebut.Value.Month].Item2,location, status));
+                    location.Datedebut = location.Datedebut.Value.AddMonths(1);
+                }
+            }
+            return retour;
+        }
+        #endregion
+
+        private static int CountArobase(string str)
         {
             return str!.ToCharArray().Count(c => c == '@');
         }

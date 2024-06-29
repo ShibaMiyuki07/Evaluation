@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using EvaluationClasse;
 
-namespace Evaluation.Context;
+namespace Evaluation;
 
 public partial class EvaluationsContext : DbContext
 {
@@ -23,6 +23,8 @@ public partial class EvaluationsContext : DbContext
     public virtual DbSet<Client> Clients { get; set; }
 
     public virtual DbSet<Location> Locations { get; set; }
+
+    public virtual DbSet<Paye> Payes { get; set; }
 
     public virtual DbSet<Typebien> Typebiens { get; set; }
 
@@ -146,6 +148,29 @@ public partial class EvaluationsContext : DbContext
                 .HasConstraintName("location_idclient_fkey");
         });
 
+        modelBuilder.Entity<Paye>(entity =>
+        {
+            entity.HasKey(e => e.Idpaye).HasName("paye_pkey");
+
+            entity.ToTable("paye");
+
+            entity.Property(e => e.Idpaye)
+                .HasMaxLength(10)
+                .HasDefaultValueSql("concat('P00', nextval('idpaye'::regclass))")
+                .IsFixedLength()
+                .HasColumnName("idpaye");
+            entity.Property(e => e.Anneepaye).HasColumnName("anneepaye");
+            entity.Property(e => e.Idlocation)
+                .HasMaxLength(10)
+                .IsFixedLength()
+                .HasColumnName("idlocation");
+            entity.Property(e => e.Moispaye).HasColumnName("moispaye");
+
+            entity.HasOne(d => d.IdlocationNavigation).WithMany(p => p.Payes)
+                .HasForeignKey(d => d.Idlocation)
+                .HasConstraintName("paye_idlocation_fkey");
+        });
+
         modelBuilder.Entity<Typebien>(entity =>
         {
             entity.HasKey(e => e.Idtypebien).HasName("typebien_pkey");
@@ -167,9 +192,10 @@ public partial class EvaluationsContext : DbContext
                 .HasColumnName("type");
         });
         modelBuilder.HasSequence("idadmin");
-        modelBuilder.HasSequence("idbien");
+        modelBuilder.HasSequence("idbien").HasMin(0L);
         modelBuilder.HasSequence("idclient");
         modelBuilder.HasSequence("idlocation");
+        modelBuilder.HasSequence("idpaye");
         modelBuilder.HasSequence("idtypebien");
 
         OnModelCreatingPartial(modelBuilder);
