@@ -8,6 +8,17 @@ namespace EvaluationClasse
 {
     public class Utils
     {
+
+        public static decimal ChiffreAffaireCommission(IEnumerable<Location> locations)
+        {
+            decimal retour = 0;
+            foreach (Location location in locations)
+            {
+                retour += ((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!)/100;
+            }
+            return retour;
+        }
+
         private static int CountArobase(string str)
         {
             return str!.ToCharArray().Count(c => c == '@');
