@@ -4305,6 +4305,16 @@
         "runtime": {
           "lib/netcoreapp2.1/_._": {}
         }
+      },
+      "EvaluationClasse/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/EvaluationClasse.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/EvaluationClasse.dll": {}
+        }
       }
     }
   },
@@ -10474,6 +10484,11 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "EvaluationClasse/1.0.0": {
+      "type": "project",
+      "path": "../EvaluationClasse/EvaluationClasse.csproj",
+      "msbuildProject": "../EvaluationClasse/EvaluationClasse.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -10481,6 +10496,7 @@
       "AutoMapper >= 13.0.1",
       "CsvHelper >= 33.0.1",
       "EFCore.BulkExtensions >= 8.0.4",
+      "EvaluationClasse >= 1.0.0",
       "HtmlAgilityPack >= 1.11.61",
       "IronPdf >= 2024.6.1",
       "IronPdf.Extensions.Mvc.Core >= 2024.5.2",
@@ -10526,7 +10542,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\eval\\Evaluation\\EvaluationClasse\\EvaluationClasse.csproj": {
+              "projectPath": "D:\\eval\\Evaluation\\EvaluationClasse\\EvaluationClasse.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

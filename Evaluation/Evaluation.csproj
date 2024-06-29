@@ -37,4 +37,8 @@
     <Folder Include="Services\Interface\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EvaluationClasse\EvaluationClasse.csproj" />
+  </ItemGroup>
+
 </Project>

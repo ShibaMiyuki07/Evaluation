@@ -57,13 +57,6 @@ namespace Evaluation.Controllers
         //    return View();
         //}
         */
-        public async Task<IActionResult> Privacy()
-        {
-            return await Task.Run(() =>
-            {
-                return View();
-            });
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Error()
