@@ -8,7 +8,7 @@ namespace EvaluationClasse
 {
     public class Utils
     {
-        private static int countArobase(string str)
+        private static int CountArobase(string str)
         {
             return str!.ToCharArray().Count(c => c == '@');
         }
@@ -27,7 +27,7 @@ namespace EvaluationClasse
 
         public static bool CheckEmail(string str)
         {
-            int nbr_arobase = countArobase(str!);
+            int nbr_arobase = CountArobase(str!);
             if (nbr_arobase != 1)
             {
                 throw new Exception("Email non valide");
@@ -41,14 +41,12 @@ namespace EvaluationClasse
 
         public static bool CheckNumero(string str)
         { 
-            bool b = false;
             try
             {
                 int.Parse(str);
-                b = true;
             }
             catch { throw; }
-            return b;
+            return true;
         }
     }
 }

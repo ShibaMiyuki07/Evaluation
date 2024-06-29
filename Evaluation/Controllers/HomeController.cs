@@ -1,6 +1,7 @@
 using Evaluation.Log.Interface;
 using Evaluation.Models;
 using Evaluation.Services;
+using Evaluation.Services.Interface;
 using EvaluationClasse;
 using IronPdf.Extensions.Mvc.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +9,12 @@ using System.Diagnostics;
 
 namespace Evaluation.Controllers
 {
-    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer,IHttpContextAccessor httpContextAccessor) : Controller
+    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer,IHttpContextAccessor httpContextAccessor,IClientService clientService) : Controller
     {
         private readonly ILoggerManager _logger = logger;
         private readonly IRazorViewRenderer razorViewRenderer = razorViewRenderer;
         private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
+        private readonly IClientService ClientService = clientService;
 
         public async Task<IActionResult> Index()
         {
@@ -48,6 +50,8 @@ namespace Evaluation.Controllers
                 {
                     if(Utils.CheckEmail(admin.Login!))
                     {
+                        Client proprietaire = await ClientService.GetClientByEmail(admin);
+                        HttpContext.Session.SetString("id", proprietaire.Idclient);
                         return View();
                     }
                 }
