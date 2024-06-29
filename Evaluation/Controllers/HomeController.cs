@@ -9,12 +9,13 @@ using System.Diagnostics;
 
 namespace Evaluation.Controllers
 {
-    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer,IHttpContextAccessor httpContextAccessor,IClientService clientService) : Controller
+    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer,IHttpContextAccessor httpContextAccessor,IClientService clientService,IAdminService adminService) : Controller
     {
         private readonly ILoggerManager _logger = logger;
         private readonly IRazorViewRenderer razorViewRenderer = razorViewRenderer;
         private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
         private readonly IClientService ClientService = clientService;
+        private readonly IAdminService AdminService = adminService;
 
         public async Task<IActionResult> Index()
         {
@@ -51,7 +52,7 @@ namespace Evaluation.Controllers
                     if(Utils.CheckEmail(admin.Login!))
                     {
                         Client proprietaire = await ClientService.GetClientByEmail(admin);
-                        HttpContext.Session.SetString("id", proprietaire.Idclient);
+                        _contextAccessor.HttpContext!.Session.SetString("id", proprietaire.Idclient);
                         return View();
                     }
                 }
@@ -63,7 +64,7 @@ namespace Evaluation.Controllers
                     if (Utils.CheckNumero(admin.Login!)) 
                     {
                         Client client = await ClientService.GetClientByNumero(admin);
-                        HttpContext.Session.SetString("id", client.Idclient);
+                        _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
                         return View();
                     }
                 }
@@ -71,6 +72,8 @@ namespace Evaluation.Controllers
                 #endregion
             }
             #region Admin
+            admin = await AdminService.GetAdminAsync(admin);
+            _contextAccessor.HttpContext!.Session.SetString("id", admin.Idadmin);
             return View();
             #endregion
         }

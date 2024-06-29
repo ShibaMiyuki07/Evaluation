@@ -21,6 +21,7 @@ namespace Evaluation.Extension
         public static void InjectServices(this IServiceCollection services)
         {
             services.AddScoped<IClientService,ClientService>();
+            services.AddScoped<IAdminService, AdminService>();
         }
 
 
