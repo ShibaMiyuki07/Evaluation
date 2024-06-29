@@ -39,6 +39,16 @@ namespace EvaluationClasse
             return true;
         }
 
-        //public static bool CheckNumero()
+        public static bool CheckNumero(string str)
+        { 
+            bool b = false;
+            try
+            {
+                int.Parse(str);
+                b = true;
+            }
+            catch { throw; }
+            return b;
+        }
     }
 }

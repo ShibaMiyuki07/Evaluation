@@ -42,15 +42,31 @@ namespace Evaluation.Controllers
         public async Task<IActionResult> Login(Admin admin)
         {
             if(admin.Mdp == null && admin.Mdp == string.Empty) 
-            { 
+            {
+                #region Proprietaire
                 try
                 {
-                    if(Utils.CheckEmail(admin.Login))
+                    if(Utils.CheckEmail(admin.Login!))
                     {
                         return View();
                     }
                 }
+                catch(Exception ex) { _logger.LogError($"Home.Login : {ex.Message} - {ex.StackTrace}"); }
+                #endregion
+                #region Client
+                try
+                {
+                    if (Utils.CheckNumero(admin.Login!)) 
+                    {
+                        return View();
+                    }
+                }
+                catch (Exception ex) { _logger.LogError($"Home.Login : {ex.Message} - {ex.StackTrace}"); }
+                #endregion
             }
+            #region Admin
+            return View();
+            #endregion
         }
         /*
         //Exemple pour l'insertion des données
