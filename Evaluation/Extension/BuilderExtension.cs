@@ -3,6 +3,8 @@ using Evaluation.Log.Interface;
 using Evaluation.Log;
 using Microsoft.EntityFrameworkCore;
 using NLog;
+using Evaluation.Services.Interface;
+using Evaluation.Services;
 
 namespace Evaluation.Extension
 {
@@ -18,7 +20,7 @@ namespace Evaluation.Extension
         }
         public static void InjectServices(this IServiceCollection services)
         {
-            //services.AddScoped<IProjetDeveloppeurService, ProjetDeveloppeurService>();
+            services.AddScoped<IClientService,ClientService>();
         }
 
 

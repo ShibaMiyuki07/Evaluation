@@ -1,10 +1,11 @@
 ﻿using Evaluation.Context;
+using Evaluation.Services.Interface;
 using EvaluationClasse;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evaluation.Services
 {
-    public class ClientService
+    public class ClientService : IClientService
     {
         private readonly EvaluationsContext _context;
         public ClientService(EvaluationsContext evaluationsContext) { _context = evaluationsContext; }
