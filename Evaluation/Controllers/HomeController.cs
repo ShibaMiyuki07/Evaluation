@@ -14,15 +14,16 @@ namespace Evaluation.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return await Task.Run(async() =>
+            return await Task.Run(() =>
             {
+                /*Test creation pdf
                 //IronPdf.License.LicenseKey = "IRONSUITE.MAMIHERIMANITRA.RAKOTOARISOA.PULSE.MG.28235-FFF220765A-H3A7R-D6L2K33YJDVE-F2ZFRCHMRBIB-ZPLIV2QWNY55-ZJF7JQMHK7IA-OAKXC3THNMTN-QEDLJYQOBOZA-VEKXDK-TT5FXEF4IBKNEA-DEPLOYMENT.TRIAL-TWDSRD.TRIAL.EXPIRES.24.JUL.2024";
                 //PdfService pdf = new(razorViewRenderer);
 
                 //PdfDocument pdfdoc = await pdf.CreatePdf<Constante>("Views/Home/Test.cshtml", null);
                 //Response.Headers.Add("Content-Disposition", "inline");
 
-                //return File(pdfdoc.BinaryData, "application/pdf","test.pdf");
+                //return File(pdfdoc.BinaryData, "application/pdf","test.pdf");*/
                 return View();
             });
             /*
