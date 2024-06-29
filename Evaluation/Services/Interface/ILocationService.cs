@@ -10,6 +10,8 @@ namespace Evaluation.Services.Interface
 
         public Task<IEnumerable<Location>> SerlectByIdAndDebut(Client client, DateOnly debut);
 
+        public Task<IEnumerable<Location>> SelectByDateDebut(DateOnly debut);
+
 
     }
 }

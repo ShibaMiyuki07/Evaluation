@@ -14,6 +14,11 @@ namespace Evaluation.Services
             return await EvaluationsContext.Locations.Include(c => c.IdbienNavigation).ThenInclude(c => c!.IdtypebienNavigation).ToListAsync();
         }
 
+        public async Task<IEnumerable<Location>> SelectByDateDebut(DateOnly debut)
+        {
+            return await EvaluationsContext.Locations.Include(c => c.IdbienNavigation).ThenInclude(c => c!.IdtypebienNavigation).Where(c => (c.Datedebut >= debut || (c.Datedebut.Value.AddMonths((int)c.Duree))>debut)).ToListAsync();
+        }
+
         public async Task<IEnumerable<Location>> SelectWithFiltre(DateOnly debut,Client proprietaire)
         {
             return await EvaluationsContext.Locations.Include(c => c.IdbienNavigation).ThenInclude(c => c.IdtypebienNavigation).Where(c => c.Datedebut >= debut && c.IdbienNavigation!.Idproprietaire == proprietaire.Idclient).ToListAsync();

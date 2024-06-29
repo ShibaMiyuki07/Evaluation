@@ -1,5 +1,6 @@
 ﻿using Evaluation.Services.Interface;
 using EvaluationClasse;
+using EvaluationClasse.Utiles;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evaluation.Controllers
@@ -27,9 +28,9 @@ namespace Evaluation.Controllers
             string t = _HttpContextAccessor.HttpContext!.Session.GetString("id")!;
             Client? client = await _ClientService.GetClientByIdAsync(t)!;
             IEnumerable<Paye> liste_paye = await _PayeService.SelectByClientAsync(client!);
-            Dictionary<string, Dictionary<int, Dictionary<int, string>>> dicPaye = Utils.ListPayeToDictionnary(liste_paye);
+            Dictionary<string, Dictionary<int, Dictionary<int, string>>> dicPaye = UtilsBien.ListPayeToDictionnary(liste_paye);
             IEnumerable<Location> locations = await _LocationService.SerlectByIdAndDebut(client!,debut);
-            List<Tuple<string,Location, string>> final = Utils.Payes(locations,dicPaye,debut,fin);
+            List<Tuple<string,Location, string>> final = UtilsBien.Payes(locations,dicPaye,debut,fin);
             ViewData["liste_final"] = final;
             return View("Index");
         }

@@ -24,7 +24,15 @@ namespace Evaluation.Controllers
 
         public async Task<IActionResult> ChiffreAffaire()
         {
-            return View("Chiffre");
+            return await Task.Run(IActionResult() =>
+            {
+                if (HttpContextAccessor.HttpContext!.Session.GetString("id") == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewData["total"] = decimal.Parse("0,0");
+                return View("Chiffre");
+            });
         }
 
         [HttpPost]
@@ -33,7 +41,7 @@ namespace Evaluation.Controllers
 			if (HttpContextAccessor.HttpContext!.Session.GetString("id") == null) return RedirectToAction("Index", "Home");
 			string t = HttpContextAccessor.HttpContext!.Session.GetString("id")!;
 			Client? proprietaire = await ClientService.GetClientByIdAsync(t)!;
-            IEnumerable<Location> locations = await LocationService.SelectWithFiltre(debut, proprietaire);
+            IEnumerable<Location> locations = await LocationService.SelectWithFiltre(debut, proprietaire!);
             decimal total = Utils.CalculChiffreAffaire(locations, fin);
             ViewData["total"] = total;
             return View("Chiffre");

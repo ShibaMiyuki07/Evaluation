@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EvaluationClasse.Utiles;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace EvaluationClasse
     public class Utils
     {
 
-        public static decimal ChiffreAffaire(IEnumerable<Location> locations)
+        public static decimal ChiffreAffaireSansDate(IEnumerable<Location> locations)
         {
             decimal retour = 0;
             foreach (Location location in locations)
@@ -21,6 +22,28 @@ namespace EvaluationClasse
             return retour;
         }
 
+        public static decimal ChiffreAffaireFiltre(IEnumerable<Location> locations,DateOnly debut,DateOnly fin)
+        {
+            decimal retour = 0;
+            foreach (Location location in locations)
+            {
+                DateOnly final = location.Datedebut!.Value.AddMonths((int)location.Duree!);
+                DateOnly debutautre = location.Datedebut.Value;
+                if (location.Datedebut < debut)
+                {
+                    debutautre = debut;
+                }
+                int duree = 0;
+                UtilsBien.SetDuree(location, debut, fin, final);
+                duree = Duree(debutautre, fin, (int)location.Duree!);
+                retour += (decimal)(location.IdbienNavigation!.Loyer * duree)!;
+            }
+            return retour;
+        }
+
+        /*
+            Calcul des commissions avec ou sans la duree
+         */
         public static decimal GainCommission(IEnumerable<Location> locations,bool avecDuree = true)
         {
             decimal retour = 0;
@@ -36,6 +59,28 @@ namespace EvaluationClasse
             return retour;
         }
 
+        public static decimal GainCommissionFiltre(IEnumerable<Location> locations, DateOnly debut,DateOnly fin)
+        {
+            decimal retour = 0;
+            foreach (Location location in locations)
+            {
+                DateOnly final = location.Datedebut!.Value.AddMonths((int)location.Duree!);
+                if (location.Datedebut < debut)
+                {
+                    location.Datedebut = debut;
+                }
+                int duree = 0;
+                UtilsBien.SetDuree(location, debut, fin, final);
+                duree = Duree(location.Datedebut!.Value, fin, (int)location.Duree!);
+                retour += (decimal)((((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!) / 100) * duree)!;
+
+            }
+            return retour;
+        }
+
+        /*
+            Calcul des commissions par mois
+         */
         public static List<Tuple<int,string,decimal>> GainCommissionParMois(IEnumerable<Location> locations)
         {
             List<Tuple<int,string,decimal>> retour = [];
@@ -53,6 +98,9 @@ namespace EvaluationClasse
             return retour;
         }
 
+        /*
+            Filtre les commissions par mois en fonction des dates
+         */
         public static List<Tuple<int,string,decimal>> GainCommissionFiltreMois(List<Tuple<int,string,decimal>> listemois,DateOnly debut,DateOnly fin)
         {
             List<Tuple<int, string, decimal>> retour = [];
@@ -86,7 +134,9 @@ namespace EvaluationClasse
             return duree;
         }
 
-
+        /*
+            Calcul des chiffres d'affaires 
+         */
         public static decimal CalculChiffreAffaire(IEnumerable<Location> location,DateOnly fin)
         {
             decimal retour = 0;
@@ -98,73 +148,7 @@ namespace EvaluationClasse
         }
         #endregion
 
-        #region Utils Paye
-        /*
-            Change la liste des paye en dictionnaire
-         */
-        public static Dictionary<string, Dictionary<int, Dictionary<int, string>>> ListPayeToDictionnary(IEnumerable<Paye> liste)
-        {
-            Dictionary<string, Dictionary<int, Dictionary<int, string>>> retour = [];
-            foreach(Paye paye in liste)
-            {
-                if(!retour.ContainsKey(paye.Idlocation))
-                {
-                    retour[paye.Idlocation] = [];
-                }
-                Dictionary<int, string> last = new Dictionary<int, string> { { (int)paye.Moispaye!, "Paye" } };
-                retour[paye.Idlocation!].Add((int)paye.Anneepaye!, last );
-            }
-            return retour;
-        }
-        public static List<Tuple<string,Location,string>> Payes(IEnumerable<Location> locations,Dictionary<string,Dictionary<int,Dictionary<int,string>>> paye,DateOnly debut,DateOnly fin)
-        {
-            List<Tuple<string,Location, string>> retour = [];
-            foreach (var location in locations)
-            {
-                DateOnly final = location.Datedebut!.Value.AddMonths((int)location.Duree!);
-                int duree = 0;
-                SetDuree(location, debut, fin, final);
-                duree = Duree(location.Datedebut!.Value, fin, (int)location.Duree!);
-                for(int i=0;i<duree; i++)
-                {
-                    string status = getStatus(location,paye);
-                    
-                    retour.Add(new Tuple<string,Location, string>(Constante.mois[location.Datedebut.Value.Month-1].Item2,location, status));
-                    location.Datedebut = location.Datedebut.Value.AddMonths(1);
-                }
-            }
-            return retour;
-        }
-
-        public static void SetDuree(Location location,DateOnly debut,DateOnly fin,DateOnly final)
-        {
-            if (location.Datedebut < debut && debut < final)
-            {
-                location.Datedebut = debut;
-                if (final < fin)
-                {
-                    location.Duree = (final.Month - debut.Month);
-                }
-                else { location.Duree = (debut.Month - fin.Month); }
-            }
-        }
-
-        public static string getStatus(Location location, Dictionary<string, Dictionary<int, Dictionary<int, string>>> paye)
-        {
-            string status = "Non Payé";
-            if (paye.ContainsKey(location.Idlocation))
-            {
-                if (paye[location.Idlocation].ContainsKey(location.Datedebut!.Value.Year))
-                {
-                    if (paye[location.Idlocation][location.Datedebut.Value.Year].ContainsKey(location.Datedebut.Value.Month))
-                    {
-                        status = paye[location.Idlocation][location.Datedebut.Value.Year][location.Datedebut.Value.Month];
-                    }
-                }
-            }
-            return status;
-        }
-        #endregion
+        
 
         private static int CountArobase(string str)
         {

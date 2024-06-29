@@ -11,7 +11,6 @@ namespace Evaluation.Controllers
 {
     public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer,IHttpContextAccessor httpContextAccessor,IClientService clientService,IAdminService adminService) : Controller
     {
-        private readonly ILoggerManager _logger = logger;
         private readonly IRazorViewRenderer razorViewRenderer = razorViewRenderer;
         private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
         private readonly IClientService ClientService = clientService;

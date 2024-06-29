@@ -10,6 +10,12 @@ namespace Evaluation.Controllers
         private readonly IHttpContextAccessor ContextAccessor = httpContextAccessor;
         private readonly ILocationService LocationService = LocationService;
 
+
+        //Chiffre d'affaire = location totale
+        //Gains = commission
+        /*
+            Index avec le total des gains , les gains par mois, chiffre d'affaire sans commission
+         */
         public async Task<IActionResult> Index()
         {
             if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
@@ -18,31 +24,43 @@ namespace Evaluation.Controllers
             }
             IEnumerable<Location> locations = await LocationService.SelectAllAsync();
 
-            decimal chiffreAffaire = Utils.ChiffreAffaire(locations);
-            ViewData["chiffreaffaire"] = chiffreAffaire;
-            decimal totalGain = Utils.GainCommission(locations);
-            ViewData["gainTotal"] = decimal.Round(totalGain,2);
+            decimal TotalChiffreAffaire = Utils.ChiffreAffaireSansDate(locations);
+            ViewData["TotalChiffreAffaire"] = TotalChiffreAffaire;
+
+
+            decimal TotalCommission = Utils.GainCommission(locations);
+            ViewData["TotalCommission"] = TotalCommission;
+
+
             List<Tuple<int,string,decimal>> GainParMois = Utils.GainCommissionParMois(locations);
-            
-            decimal chiffresanscommission = Math.Abs(totalGain - chiffreAffaire);
-            ViewData["gainSansCommission"] = chiffresanscommission;
-            ViewData["gainparmois"] = GainParMois;
+            ViewData["GainParMois"] = GainParMois;
+
+
+            decimal ChiffreSansCommission = Math.Abs(TotalCommission - TotalChiffreAffaire);
+            ViewData["ChiffreSansCommission"] = ChiffreSansCommission;
             return View();
         }
+
+
         [HttpPost]
         public async Task<IActionResult> Index(DateOnly debut,DateOnly fin)
         {
-			IEnumerable<Location> locations = await LocationService.SelectAllAsync();
-			decimal chiffreAffaire = Utils.ChiffreAffaire(locations);
-			ViewData["chiffreaffaire"] = chiffreAffaire;
-			decimal totalGain = Utils.GainCommission(locations);
-			ViewData["gainTotal"] = totalGain;
-			List<Tuple<int, string, decimal>> GainParMois = Utils.GainCommissionParMois(locations);
-			GainParMois = Utils.GainCommissionFiltreMois(GainParMois, debut,fin);
+			IEnumerable<Location> locations = await LocationService.SelectByDateDebut(debut);
 
-            decimal chiffresanscommission = Math.Abs(totalGain - chiffreAffaire);
-            ViewData["gainSansCommission"] = chiffresanscommission;
-			ViewData["gainparmois"] = GainParMois;
+			decimal TotalChiffreAffaireFiltre = Utils.ChiffreAffaireFiltre(locations,debut,fin);
+			ViewData["TotalChiffreAffaire"] = TotalChiffreAffaireFiltre;
+
+
+			decimal TotalCommissionFiltre = Utils.GainCommissionFiltre(locations,debut,fin);
+			ViewData["TotalCommission"] = TotalCommissionFiltre;
+
+
+			List<Tuple<int, string, decimal>> GainParMoisFiltre = Utils.GainCommissionParMois(locations);
+            GainParMoisFiltre = Utils.GainCommissionFiltreMois(GainParMoisFiltre, debut,fin);
+            ViewData["GainParMois"] = GainParMoisFiltre;
+
+            decimal chiffresanscommission = Math.Abs(TotalChiffreAffaireFiltre - TotalCommissionFiltre);
+            ViewData["ChiffreSansCommission"] = chiffresanscommission;
 			return View("Index", ViewData);
 		}
 

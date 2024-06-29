@@ -1,8 +1,5 @@
 ﻿@{
-    decimal? gainTotal = (decimal)ViewData["gainTotal"]!;
-    List<Tuple<int, string, decimal>> gainparmois = (List<Tuple<int, string, decimal>>)ViewData["gainparmois"]!;
-    decimal? chiffreaffaire = (decimal)ViewData["chiffreaffaire"]!;
-    decimal chiffresanscommission = (decimal)ViewData["gainSansCommission"]!;
+    decimal? total = (decimal)ViewData["total"]!;
 }
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -37,7 +34,6 @@
     <!-- Body main wrapper start -->
     <div class="body-wrapper">
 
-        <!-- HEADER AREA START (header-5) -->
         <header class="ltn__header-area ltn__header-5 ltn__header-transparent--- gradient-color-4---">
             <!-- ltn__header-top-area start -->
             <div class="ltn__header-top-area section-bg-6 top-area-color-white---">
@@ -46,8 +42,8 @@
                         <div class="col-md-7">
                             <div class="ltn__top-bar-menu">
                                 <ul>
-                                    <li><a href="mailto:info@webmail.com?Subject=Flower%20greetings%20to%20you"><i class="icon-mail"></i> info@webmail.com</a></li>
-                                    <li><a href="locations.html"><i class="icon-placeholder"></i> 15/A, Nest Tower, NYC</a></li>
+                                    <li><a href="mailto:info@webmail.com?Subject=Flower%20greetings%20to%20you"><i class="icon-mail"></i> manitrarakotoar@gmail.com</a></li>
+                                    <li><a href="locations.html"><i class="icon-placeholder"></i> Antananarivo,Analamanga,MDG</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -57,7 +53,14 @@
                                     <ul>
                                         <li class="d-none">
                                             <!-- ltn__language-menu -->
-                                            <
+                                            <div class="ltn__drop-menu ltn__currency-menu ltn__language-menu">
+                                                <ul>
+                                                    <li>
+                                                        <a href="#" class="dropdown-toggle"><span class="active-currency">English</span></a>
+
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </li>
                                         <li>
                                             <!-- ltn__social-media -->
@@ -72,10 +75,6 @@
                                             </div>
                                         </li>
                                         <li>
-                                            <!-- header-top-btn -->
-                                            <div class="header-top-btn">
-                                                <a href="add-listing.html">Add Listing</a>
-                                            </div>
                                         </li>
                                     </ul>
                                 </div>
@@ -110,16 +109,13 @@
                                 <nav>
                                     <div class="ltn__main-menu">
                                         <ul>
+                                            <li><a href="/Proprietaire/Index">Chiffre</a></li>
                                         </ul>
                                     </div>
                                 </nav>
                             </div>
                         </div>
                         <div class="col ltn__header-options ltn__header-options-2 mb-sm-20">
-                            <!-- header-search-1 -->
-                            <div class="header-search-wrap">
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -161,35 +157,8 @@
                             <div class="counter-icon">
                                 <i class="flaticon-key"></i>
                             </div>
-                            <h1><span>@gainTotal</span></h1>
-                            <h6>Gain Via Commission total</h6>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 align-self-center">
-                        <div class="ltn__counterup-item text-color-white---">
-                            <div class="counter-icon">
-                                <i class="flaticon-office"></i>
-                            </div>
-                            <h1><span>@chiffreaffaire</span></h1>
-                            <h6>Chiffre d'affaire + Commission</h6>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 align-self-center">
-                        <div class="ltn__counterup-item text-color-white---">
-                            <div class="counter-icon">
-                                <i class="flaticon-house"></i>
-                            </div>
-                            <h1><span>@chiffresanscommission</span></h1>
-                            <h6>Chiffre sans commission</h6>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 align-self-center">
-                        <div class="ltn__counterup-item text-color-white---">
-                            <div class="counter-icon">
-                                <i class="flaticon-armchair"></i>
-                            </div>
-                            <h1><span>340</span></h1>
-                            <h6>Apartio Rooms</h6>
+                            <h1><span>@total</span></h1>
+                            <h6>Chiffre durant periode</h6>
                         </div>
                     </div>
                 </div>
