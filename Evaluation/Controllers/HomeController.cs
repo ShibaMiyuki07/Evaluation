@@ -44,7 +44,7 @@ namespace Evaluation.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(Admin admin)
         {
-            if(admin.Mdp == null && admin.Mdp == string.Empty) 
+            if(admin.Mdp == null || admin.Mdp == string.Empty) 
             {
                 #region Proprietaire
                 try
@@ -73,7 +73,15 @@ namespace Evaluation.Controllers
             }
             #region Admin
             admin = await AdminService.GetAdminAsync(admin);
-            _contextAccessor.HttpContext!.Session.SetString("id", admin.Idadmin);
+            if(admin == null || admin.Idadmin == string.Empty || admin.Idadmin == null)
+            {
+                ViewData["erreur"] = "Identifiant inexistant";
+                return View("Index");
+            }
+            else
+            {
+                _contextAccessor.HttpContext!.Session.SetString("id", admin.Idadmin);
+            }
             return View();
             #endregion
         }
