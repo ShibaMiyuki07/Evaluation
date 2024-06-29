@@ -24,6 +24,8 @@ namespace Evaluation.Controllers
             IEnumerable<Location> locations = await LocationService.SelectAllAsync();
             decimal totalChiffre = Utils.ChiffreAffaireCommission(locations);
             ViewData["total"] = totalChiffre;
+            List<Tuple<string,decimal>> chiffreparmois = Utils.ChiffreAffaireCommissionParMois(locations);
+            ViewData["chiffreparmois"] = chiffreparmois;
             return View();
         }
     }

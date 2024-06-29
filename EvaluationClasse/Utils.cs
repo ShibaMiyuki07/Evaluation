@@ -9,12 +9,34 @@ namespace EvaluationClasse
     public class Utils
     {
 
-        public static decimal ChiffreAffaireCommission(IEnumerable<Location> locations)
+        public static decimal ChiffreAffaireCommission(IEnumerable<Location> locations,bool avecDuree = true)
         {
             decimal retour = 0;
             foreach (Location location in locations)
             {
-                retour += ((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!)/100;
+                if (avecDuree)
+                {
+                    retour += (decimal)((((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!) / 100) * location.Duree)!;
+                }
+                else retour += ((((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!) / 100))!;
+
+			}
+            return retour;
+        }
+
+        public static List<Tuple<string,decimal>> ChiffreAffaireCommissionParMois(IEnumerable<Location> locations)
+        {
+            List<Tuple<string,decimal>> retour = [];
+            List<Tuple<int, string>> mois = Constante.mois;
+            for (int i = 0;i<mois.Count;i++)
+            {
+                decimal chiffre_mois = 0;
+                IEnumerable<Location> liste_mois = locations.Where(l => l.Datedebut!.Value.Month == mois[i].Item1).ToList();
+                chiffre_mois += ChiffreAffaireCommission(locations,false);
+                IEnumerable<Location> liste_en_cours = locations.Where(l => (l.Datedebut!.Value.Month + l.Duree) <= mois[i].Item1).ToList();
+                chiffre_mois += ChiffreAffaireCommission(locations, false);
+
+                retour.Add(new Tuple<string, decimal>(mois[i].Item2,chiffre_mois));
             }
             return retour;
         }
