@@ -24,9 +24,9 @@ namespace EvaluationClasse
             return retour;
         }
 
-        public static List<Tuple<string,decimal>> ChiffreAffaireCommissionParMois(IEnumerable<Location> locations)
+        public static List<Tuple<int,string,decimal>> ChiffreAffaireCommissionParMois(IEnumerable<Location> locations)
         {
-            List<Tuple<string,decimal>> retour = [];
+            List<Tuple<int,string,decimal>> retour = [];
             List<Tuple<int, string>> mois = Constante.mois;
             for (int i = 0;i<mois.Count;i++)
             {
@@ -36,7 +36,21 @@ namespace EvaluationClasse
                 IEnumerable<Location> liste_en_cours = locations.Where(l => ((l.Datedebut!.Value.Month + l.Duree) > mois[i].Item1) && l.Datedebut!.Value.Month != mois[i].Item1).ToList();
                 chiffre_mois += ChiffreAffaireCommission(liste_en_cours, false);
 
-                retour.Add(new Tuple<string, decimal>(mois[i].Item2,chiffre_mois));
+                retour.Add(new Tuple<int,string, decimal>(mois[i].Item1,mois[i].Item2,chiffre_mois));
+            }
+            return retour;
+        }
+
+        public static List<Tuple<int,string,decimal>> ChiffreAffaireFiltreMois(List<Tuple<int,string,decimal>> listemois,DateOnly debut,DateOnly fin)
+        {
+            List<Tuple<int, string, decimal>> retour = [];
+
+			foreach (var l in listemois)
+            {
+                if(l.Item1 >= debut.Month && l.Item1 <= fin.Month)
+                {
+                    retour.Add(l);
+                }
             }
             return retour;
         }

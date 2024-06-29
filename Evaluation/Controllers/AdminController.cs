@@ -24,9 +24,21 @@ namespace Evaluation.Controllers
             IEnumerable<Location> locations = await LocationService.SelectAllAsync();
             decimal totalChiffre = Utils.ChiffreAffaireCommission(locations);
             ViewData["total"] = totalChiffre;
-            List<Tuple<string,decimal>> chiffreparmois = Utils.ChiffreAffaireCommissionParMois(locations);
+            List<Tuple<int,string,decimal>> chiffreparmois = Utils.ChiffreAffaireCommissionParMois(locations);
             ViewData["chiffreparmois"] = chiffreparmois;
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> Index(DateOnly debut,DateOnly fin)
+        {
+			IEnumerable<Location> locations = await LocationService.SelectAllAsync();
+			decimal totalChiffre = Utils.ChiffreAffaireCommission(locations);
+			ViewData["total"] = totalChiffre;
+			List<Tuple<int,string, decimal>> chiffreparmois = Utils.ChiffreAffaireCommissionParMois(locations);
+			chiffreparmois = Utils.ChiffreAffaireFiltreMois(chiffreparmois,debut,fin);
+			ViewData["chiffreparmois"] = chiffreparmois;
+			return View("Index", ViewData);
+		}
+
     }
 }
