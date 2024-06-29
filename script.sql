@@ -39,6 +39,8 @@ insert into biens(nombien,description,region,loyer,photos,idproprietaire,idtypeb
 
 insert into location(idclient,duree,datedebut,idbien) values('C002',3,'2024-01-01','B001');
 
+insert into location(idclient,duree,datedebut,idbien) values('C002',4,'2024-06-01','B001');
+
 insert into paye(idlocation,moispaye,anneepaye) values('L001','01','2024');
 
 

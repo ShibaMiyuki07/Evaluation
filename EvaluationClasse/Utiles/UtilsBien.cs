@@ -30,6 +30,7 @@ namespace EvaluationClasse.Utiles
 
         /**
          * Check les payes
+         * Paye jusqu'a maintenant
          */
         public static List<Tuple<string, Location, string>> Payes(IEnumerable<Location> locations, Dictionary<string, Dictionary<int, Dictionary<int, string>>> paye, DateOnly debut, DateOnly fin)
         {
@@ -42,7 +43,11 @@ namespace EvaluationClasse.Utiles
                 duree = Utils.Duree(location.Datedebut!.Value, fin, (int)location.Duree!);
                 for (int i = 0; i < duree; i++)
                 {
-                    string status = GetStatus(location, paye);
+                    string status = "Non Paye";
+                    if (location.Datedebut.Value.Month <= DateTime.Now.Month && location.Datedebut.Value.Year <= DateTime.Now.Year)
+                    {
+                        status = "Paye";
+                    }
 
                     retour.Add(new Tuple<string, Location, string>(Constante.mois[location.Datedebut.Value.Month - 1].Item2, location, status));
                     location.Datedebut = location.Datedebut.Value.AddMonths(1);

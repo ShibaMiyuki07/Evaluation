@@ -1,4 +1,5 @@
-﻿using EvaluationClasse.Utiles;
+﻿using EvaluationClasse.Modele;
+using EvaluationClasse.Utiles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -83,18 +84,31 @@ namespace EvaluationClasse
          */
         public static List<Tuple<int,string,decimal>> GainCommissionParMois(IEnumerable<Location> locations)
         {
-            List<Tuple<int,string,decimal>> retour = [];
+            List<Tuple<int, string, decimal>> retour = [];
             List<Tuple<int, string>> mois = Constante.mois;
-            for (int i = 0;i<mois.Count;i++)
-            {
-                decimal chiffre_mois = 0;
-                IEnumerable<Location> liste_mois = locations.Where(l => l.Datedebut!.Value.Month == mois[i].Item1).ToList();
-                chiffre_mois += GainCommission(liste_mois,false);
-                IEnumerable<Location> liste_en_cours = locations.Where(l => ((l.Datedebut!.Value.Month + l.Duree) > mois[i].Item1) && l.Datedebut!.Value.Month != mois[i].Item1).ToList();
-                chiffre_mois += GainCommission(liste_en_cours, false);
 
-                retour.Add(new Tuple<int,string, decimal>(mois[i].Item1,mois[i].Item2,chiffre_mois));
+            IEnumerable<MoisGain> LocationDateDebut = locations.GroupBy(l => l.Datedebut!.Value!.Month).Select(x => new MoisGain { Mois = x.Key, Amount = x.Sum(l => (decimal)l.IdbienNavigation!.Loyer!)}).ToList();
+            for(int i=0; i<mois.Count;i++)
+            {
+                MoisGain MoisGain = LocationDateDebut.Where(x => x.Mois == mois[i].Item1).FirstOrDefault()!;
+                Location MoisEnCours = locations.Where(x => (x.Datedebut!.Value.Month < mois[i].Item1 && (x.Datedebut.Value!.AddMonths((int) x.Duree).Month - mois[i].Item1 >0))).FirstOrDefault()!;
+                
+                decimal to_add = 0;
+                if(MoisEnCours == null && MoisGain != null)
+                {
+                    to_add = MoisGain.Amount;
+                }
+                else if(MoisGain == null&& MoisEnCours != null)
+                {
+                    to_add = (decimal)MoisEnCours.IdbienNavigation!.Loyer!;
+                }
+                else if(MoisEnCours != null && MoisGain != null)
+                {
+                    to_add = (decimal)MoisEnCours.IdbienNavigation!.Loyer! + MoisGain.Amount;
+                }
+                retour.Add(new Tuple<int, string, decimal>(mois[i].Item1, mois[i].Item2,to_add));
             }
+
             return retour;
         }
 
