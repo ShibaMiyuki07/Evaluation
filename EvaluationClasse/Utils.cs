@@ -65,7 +65,34 @@ namespace EvaluationClasse
             return retour;
         }
 
-        private static int CountArobase(string str)
+		#region Utils Bien
+		public static decimal Commission(Bien bien)
+        {
+            return (decimal)(bien.Loyer! * bien.IdtypebienNavigation!.Commission!)/ 100;
+        }
+
+        public static int Duree(DateOnly debut,DateOnly fin)
+        {
+            int duree = 0;
+            for(int i=debut.Month;i<=fin.Month;i++)
+            {
+                duree++;
+            }
+            return duree;
+        }
+
+        public static decimal CalculChiffreAffaire(IEnumerable<Location> location,DateOnly fin)
+        {
+            decimal retour = 0;
+            foreach (var bien in location)
+            {
+                retour += (decimal)((bien.IdbienNavigation!.Loyer - Commission(bien.IdbienNavigation)) * Duree((DateOnly)bien.Datedebut!,fin))!;
+            }
+            return retour;
+        }
+		#endregion
+
+		private static int CountArobase(string str)
         {
             return str!.ToCharArray().Count(c => c == '@');
         }
@@ -87,11 +114,11 @@ namespace EvaluationClasse
             int nbr_arobase = CountArobase(str!);
             if (nbr_arobase != 1)
             {
-                throw new Exception("Email non valide");
+                return false;
             }
             if (!VerifyEmail(str!))
             {
-                throw new Exception("Le nom de domaine de l'email est invalide");
+                return false;
             }
             return true;
         }
@@ -102,7 +129,7 @@ namespace EvaluationClasse
             {
                 int.Parse(str);
             }
-            catch { throw; }
+            catch { return false; }
             return true;
         }
     }

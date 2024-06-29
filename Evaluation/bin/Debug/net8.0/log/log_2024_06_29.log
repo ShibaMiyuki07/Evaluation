@@ -4,3 +4,25 @@
    at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
 2024-06-29 12:10:54.2070|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 90
    at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:09:58.4171|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 90
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:11:36.1252|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 90
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:18:18.6684|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 90
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:19:15.4489|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 90
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:19:59.6743|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 90
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:20:56.9527|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 90
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:21:50.7698|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 90
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:36:58.8819|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 117
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:38:34.6723|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 117
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:42:22.4384|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 117
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52
+2024-06-29 13:46:47.8139|ERROR|Evaluation.Log.LoggerManager|Home.Login : Email non valide -    at EvaluationClasse.Utils.CheckEmail(String str) in D:\eval\Evaluation\EvaluationClasse\Utils.cs:line 117
+   at Evaluation.Controllers.HomeController.Login(Admin admin) in D:\eval\Evaluation\Evaluation\Controllers\HomeController.cs:line 52

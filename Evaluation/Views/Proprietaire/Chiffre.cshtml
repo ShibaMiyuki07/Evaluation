@@ -1,0 +1,19 @@
+﻿@{
+
+}
+<html>
+	<head>
+
+	</head>
+	<body>
+		<form method="post">
+			<input type="date" name="debut"/>
+			<input type="date" name="fin"/>
+			<input type="submit" value="Valider"/>
+		</form>
+		@if (ViewData["total"] != null)
+		{
+		<div>Chiffre durant cette periode : @ViewData["total"] Ar</div>
+		}
+	</body>
+</html>
