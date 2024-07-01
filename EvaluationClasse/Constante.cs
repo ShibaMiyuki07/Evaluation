@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvaluationClasse
 {
-    internal class Constante
+    public class Constante
     {
         public static List<string> mailExtension = [".com", ".fr", ".mg", ".de", ".org", ".net"];
 

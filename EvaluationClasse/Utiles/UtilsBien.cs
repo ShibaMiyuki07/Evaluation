@@ -44,7 +44,7 @@ namespace EvaluationClasse.Utiles
                 for (int i = 0; i < duree; i++)
                 {
                     string status = "Non Paye";
-                    if (location.Datedebut.Value.Month <= DateTime.Now.Month && location.Datedebut.Value.Year <= DateTime.Now.Year)
+                    if (location.Datedebut.Value.Month <= DateTime.Now.Month  && location.Datedebut.Value.Year <= DateTime.Now.Year)
                     {
                         status = "Paye";
                     }

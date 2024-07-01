@@ -2,6 +2,7 @@ using Evaluation.Log.Interface;
 using Evaluation.Models;
 using Evaluation.Services;
 using Evaluation.Services.Interface;
+using Evaluation.Services.Utile;
 using EvaluationClasse;
 using IronPdf.Extensions.Mvc.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,21 @@ using System.Diagnostics;
 
 namespace Evaluation.Controllers
 {
-    public class HomeController(ILoggerManager logger,IRazorViewRenderer razorViewRenderer,IHttpContextAccessor httpContextAccessor,IClientService clientService,IAdminService adminService) : Controller
+    public class HomeController(ILoggerManager logger,
+        IRazorViewRenderer razorViewRenderer,
+        IHttpContextAccessor httpContextAccessor,
+        IClientService clientService,
+        IAdminService adminService,
+        IBienService bienService,
+        ILocationService location) : Controller
     {
         private readonly IRazorViewRenderer razorViewRenderer = razorViewRenderer;
         private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
         private readonly IClientService ClientService = clientService;
         private readonly IAdminService AdminService = adminService;
+        private readonly ILoggerManager loggerManager = logger;
+        private readonly IBienService bienService = bienService;
+        private readonly ILocationService locationService = location;
 
         public async Task<IActionResult> Index()
         {
@@ -104,7 +114,7 @@ namespace Evaluation.Controllers
             {
                 _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
             }
-            catch (Exception ex) { throw; }
+            catch { throw; }
             return RedirectToAction("Index", "Proprietaire");
         }
         #endregion
@@ -117,7 +127,7 @@ namespace Evaluation.Controllers
             {
                 _contextAccessor.HttpContext!.Session.SetString("id", client.Idclient);
             }
-            catch (Exception ex) { throw; }
+            catch { throw; }
             return RedirectToAction("Index", "Client");
         }
         #endregion
@@ -161,6 +171,35 @@ namespace Evaluation.Controllers
                 _contextAccessor.HttpContext!.Session.Remove("id");
                 return RedirectToAction("Index", "Home");
             });
+        }
+
+
+        public async Task<IActionResult> Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Import(IFormFile file)
+        {
+            if(file == null)
+            {
+                ViewData["erreur"] = "Fichier invalide"; 
+                return View();
+            }
+            if(file.FileName.ToLower().Contains("location"))
+            {
+                IEnumerable<Evaluaton.Models.Csv.Location> locations = await new CsvImporterService<Evaluaton.Models.Csv.Location>(loggerManager).ImportFromIFormFile(file);
+                await locationService.CreateDataFromCSV(locations);
+                ViewData["success"] = "Toutes les locations ont été ajouté avec succés";
+            }
+            if(file.FileName.ToLower().Contains("bien"))
+            {
+                IEnumerable<Evaluaton.Models.Csv.Bien> biens = await new CsvImporterService<Evaluaton.Models.Csv.Bien>(loggerManager).ImportFromIFormFile(file);
+                await bienService.CreateDataFromCSV(biens);
+                ViewData["success"] = "Tout les biens ont été ajouté avec succés";
+            }
+            return View();
         }
     }
 }

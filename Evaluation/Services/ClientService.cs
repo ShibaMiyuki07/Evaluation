@@ -25,5 +25,27 @@ namespace Evaluation.Services
         {
             return await _context.Clients.Where(c => c.Idclient == idclient).FirstOrDefaultAsync()!;
         }
+
+        public async Task<string> CreateClientAsync(string numero)
+        {
+            Client cl = new()
+            {
+                Numeroclient = numero,
+            };
+            await _context.AddAsync(cl);
+            await _context.SaveChangesAsync();
+            return cl.Idclient;
+        }
+
+        public async Task<string> CreateProprietaireAsync(string email)
+        {
+            Client cl = new()
+            {
+                Emailclient = email,
+            };
+            await _context.AddAsync(cl);
+            await _context.SaveChangesAsync();
+            return cl.Idclient;
+        }
     }
 }

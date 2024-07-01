@@ -25,6 +25,7 @@ namespace Evaluation.Extension
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IBienService, BienService>();
             services.AddScoped<IPayeService, PayeService>();
+            services.AddScoped<ITypeBienService, TypeBienService>();
         }
 
 
@@ -38,5 +39,6 @@ namespace Evaluation.Extension
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
         }
+
     }
 }

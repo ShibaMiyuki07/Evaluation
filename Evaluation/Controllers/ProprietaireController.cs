@@ -1,4 +1,5 @@
-﻿using Evaluation.Services.Interface;
+﻿using Evaluation.Models;
+using Evaluation.Services.Interface;
 using EvaluationClasse;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,9 @@ namespace Evaluation.Controllers
             Client? proprietaire = await ClientService.GetClientByIdAsync(t)!;
 			IEnumerable<Bien> liste_bien = await BienService.SelectBienByProprietaireAsync(proprietaire!);
             ViewData["liste_bien"] = liste_bien;
+
+            Dictionary<string, DateOnly> listeDispo = await BienService.AllBienToDictionnary(proprietaire!);
+            ViewData["ListeDispo"] = listeDispo;
             return View();
         }
 

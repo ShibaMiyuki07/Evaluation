@@ -1,0 +1,24 @@
+﻿@{
+	string erreur = (string)ViewData["erreur"]!;
+	string success = (string)ViewData["success"]!;
+}
+
+<html>
+	<head>
+		<title>Import Data</title>
+	</head>
+	<body>
+		@if(erreur != null && erreur != string.Empty)
+		{
+			<div>@erreur</div>
+		}
+		@if(success != null && success != string.Empty)
+		{
+			<div>@success</div>
+		}
+	<form method="post" action="/Home/Import" enctype="multipart/form-data">
+			<div><input type="file" name="file" /></div>
+			<div><input type="submit" value="Valider"/></div>
+		</form>
+	</body>
+</html>
