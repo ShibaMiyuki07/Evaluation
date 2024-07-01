@@ -13,5 +13,8 @@ namespace Evaluation.Services.Interface
         public Task<IEnumerable<Location>> SelectByDateDebut(DateOnly debut);
 
         public Task CreateDataFromCSV(IEnumerable<Evaluaton.Models.Csv.Location> listes);
-    }
+
+        public Task CreateLocation(Location location);
+
+	}
 }

@@ -5,12 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evaluation.Controllers
 {
-    public class AdminController(IHttpContextAccessor httpContextAccessor, ILocationService LocationService,IAdminService adminService) : Controller
+    public class AdminController(IHttpContextAccessor httpContextAccessor,
+        ILocationService LocationService,
+        IAdminService AdminService,
+        IBienService BienService,
+        IClientService ClientService) : Controller
     {
         private readonly IHttpContextAccessor ContextAccessor = httpContextAccessor;
         private readonly ILocationService LocationService = LocationService;
-        private readonly IAdminService adminService = adminService;
-
+        private readonly IAdminService AdminService = AdminService;
+        private readonly IBienService BienService = BienService;
+        private readonly IClientService ClientService = ClientService;
 
         //Chiffre d'affaire = location totale
         //Gains = commission
@@ -75,9 +80,82 @@ namespace Evaluation.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            await adminService.DeleteAll();
+            await AdminService.DeleteAll();
             return RedirectToAction("Index","Home");
         }
 
+
+        public async Task<IActionResult> Location()
+        {
+
+			if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			IEnumerable<Bien> ListeBien = await BienService.SelectAllAsync();
+            IEnumerable<Client> ListeClient = await ClientService.GetAllClient();
+            ViewData["ListeBien"] = ListeBien;
+            ViewData["ListeClient"] = ListeClient;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Location(string idbien,string idclient,string datedebut,string duree)
+        {
+
+			if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			#region Check Bien
+			Bien bien = await BienService.SelectBienByIdWithLocations(idbien);
+            if(bien == null)
+            {
+                ViewData["erreur"] = "Veuillez selectionner un bien";
+                return await Location();
+            }
+			#endregion
+
+			#region Check Client
+			Client? client = await ClientService.GetClientByIdAsync(idclient)!;
+            if(client == null)
+            {
+                ViewData["erreur"] = "Veuillez selectionner un client";
+                return await Location();
+            }
+			#endregion
+
+			#region Create Location
+			Location location = new();
+            try
+            {
+				int IntDuree = int.Parse(duree);
+                location.Duree = IntDuree;
+			}
+            catch { 
+                ViewData["erreur"] = "La durée doit être un chiffre"; 
+                return await Location(); }
+            try
+            {
+                DateOnly DateDebut = DateOnly.Parse(datedebut);
+                location.Datedebut = DateDebut;
+            }
+            catch { 
+                ViewData["erreur"] = "Date/Format date invalide"; 
+                return await Location();
+            }
+
+            try
+            {
+                bool CheckValidite = await BienService.CheckValidite(bien, location);
+                if(CheckValidite)
+                {
+                    await LocationService.CreateLocation(location);
+                }
+            }
+            catch(Exception e) { ViewData["erreur"] = e.Message;return await Location(); }
+			#endregion
+			return View();
+        }
     }
 }

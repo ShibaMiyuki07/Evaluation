@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using EvaluationClasse;
 
-namespace Evaluation;
+namespace Evaluation.Context;
 
 public partial class EvaluationsContext : DbContext
 {
@@ -23,6 +23,8 @@ public partial class EvaluationsContext : DbContext
     public virtual DbSet<Client> Clients { get; set; }
 
     public virtual DbSet<Location> Locations { get; set; }
+
+    public virtual DbSet<Locationparmoi> Locationparmois { get; set; }
 
     public virtual DbSet<Paye> Payes { get; set; }
 
@@ -148,6 +150,32 @@ public partial class EvaluationsContext : DbContext
                 .HasConstraintName("location_idclient_fkey");
         });
 
+        modelBuilder.Entity<Locationparmoi>(entity =>
+        {
+            entity.HasKey(e => e.Idlocationparmois).HasName("locationparmois_pkey");
+
+            entity.ToTable("locationparmois");
+
+            entity.Property(e => e.Idlocationparmois)
+                .HasMaxLength(10)
+                .HasDefaultValueSql("concat('I00', nextval('idlocationparmois'::regclass))")
+                .IsFixedLength()
+                .HasColumnName("idlocationparmois");
+            entity.Property(e => e.Annee).HasColumnName("annee");
+            entity.Property(e => e.Idlocation)
+                .HasMaxLength(10)
+                .IsFixedLength()
+                .HasColumnName("idlocation");
+            entity.Property(e => e.Mois).HasColumnName("mois");
+            entity.Property(e => e.Montant)
+                .HasPrecision(10, 2)
+                .HasColumnName("montant");
+
+            entity.HasOne(d => d.IdlocationNavigation).WithMany(p => p.Locationparmois)
+                .HasForeignKey(d => d.Idlocation)
+                .HasConstraintName("locationparmois_idlocation_fkey");
+        });
+
         modelBuilder.Entity<Paye>(entity =>
         {
             entity.HasKey(e => e.Idpaye).HasName("paye_pkey");
@@ -183,7 +211,7 @@ public partial class EvaluationsContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("idtypebien");
             entity.Property(e => e.Commission)
-                .HasPrecision(3, 1)
+                .HasPrecision(4, 2)
                 .HasDefaultValueSql("0.0")
                 .HasColumnName("commission");
             entity.Property(e => e.Type)
@@ -192,9 +220,10 @@ public partial class EvaluationsContext : DbContext
                 .HasColumnName("type");
         });
         modelBuilder.HasSequence("idadmin");
-        modelBuilder.HasSequence("idbien").HasMin(0L);
+        modelBuilder.HasSequence("idbien");
         modelBuilder.HasSequence("idclient");
         modelBuilder.HasSequence("idlocation");
+        modelBuilder.HasSequence("idlocationparmois");
         modelBuilder.HasSequence("idpaye");
         modelBuilder.HasSequence("idtypebien");
 

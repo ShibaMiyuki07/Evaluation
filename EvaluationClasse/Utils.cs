@@ -95,7 +95,7 @@ namespace EvaluationClasse
                 /*
                     Get All A Payer (datedebut + duree) - mois > 0
                  */
-                IEnumerable<Location> MoisEnCours = locations.Where(x => (x.Datedebut!.Value.Month < mois[i].Item1 && (x.Datedebut.Value!.AddMonths((int) x.Duree).Month - mois[i].Item1 >0))).ToList()!;
+                IEnumerable<Location> MoisEnCours = locations.Where(x => (x.Datedebut!.Value.Month < mois[i].Item1 && (x.Datedebut.Value!.AddMonths((int) x.Duree!).Month - mois[i].Item1 >0))).ToList()!;
                 
                 decimal to_add = 0;
                 if(!MoisEnCours.Any() && MoisGain != null)

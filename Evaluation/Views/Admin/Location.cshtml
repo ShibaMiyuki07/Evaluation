@@ -1,0 +1,39 @@
+﻿@using EvaluationClasse
+@{
+	IEnumerable<Client> ListeClient = (IEnumerable<Client>)ViewData["ListeClient"]!;
+	IEnumerable<Bien> ListeBien = (IEnumerable<Bien>)ViewData["ListeBien"]!;
+	string erreur = (string)ViewData["erreur"]! ?? string.Empty;
+}
+<html>
+	<head></head>
+	<body>
+		@if(erreur != null && erreur != string.Empty)
+		{
+			<div>@erreur</div>
+		}
+		<form method="post" action="/Admin/Location">
+			<div> Bien : 
+				<select name="idbien">
+					<option>Bien</option>
+					@foreach(var bien in ListeBien)
+					{
+						<option value="@bien.Idbien">@bien.Nombien</option>
+					}
+				</select>
+			</div>
+			<div>
+				Client : 
+				<select name="idclient">
+					<option>Client</option>
+					@foreach(var client in ListeClient)
+						{
+							<option value="@client.Idclient">@client.Emailclient</option>
+						}
+					</select>
+			</div>
+			<div><input type="text" name="datedebut" placeholder="Date de debut...."/></div>
+			<div><input type="text" name="duree" placeholder="Duree..."/></div>
+			<div><input type="submit" value="Submit" /></div>
+		</form>
+	</body>
+</html>

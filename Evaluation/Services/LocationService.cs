@@ -6,10 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Evaluation.Services
 {
-    public class LocationService(EvaluationsContext evaluationsContext,IClientService clientService) : ILocationService
+    public class LocationService(EvaluationsContext evaluationsContext,IClientService clientService,IBienService bienService) : ILocationService
     {
         private readonly EvaluationsContext EvaluationsContext = evaluationsContext;
         private readonly IClientService clientService = clientService;
+        private readonly IBienService BienService = bienService;
 
         public async Task<IEnumerable<Location>> SelectAllAsync()
         {
@@ -41,6 +42,7 @@ namespace Evaluation.Services
                     Proprietaire = new();
                     Proprietaire.Idclient = await clientService.CreateProprietaireAsync(location.Client);
                 }
+                Bien bien = await BienService.SelectBienByIdWithLocations(location.Reference);
                 Location nouveau = new()
                 {
                     Idbien = location.Reference,
@@ -50,7 +52,35 @@ namespace Evaluation.Services
                 };
                 await EvaluationsContext.AddAsync(nouveau);
 				await EvaluationsContext.SaveChangesAsync();
+
+                await CreateLocationMois(nouveau, bien);
 			}
         }
+
+        public async Task CreateLocation(Location location)
+        {
+            await EvaluationsContext.AddAsync(location);
+            await EvaluationsContext.SaveChangesAsync();
+            Bien bien = await BienService.SelectBienByIdWithLocations(location.Idbien);
+            await CreateLocationMois(location, bien);
+        }
+
+        private async Task CreateLocationMois(Location nouveau,Bien bien)
+        {
+			for (int i = 0; i < nouveau.Duree; i++)
+			{
+				Locationparmoi locationparmoi = new()
+				{
+					Idlocation = nouveau.Idlocation,
+					Mois = nouveau.Datedebut!.Value!.Month,
+					Annee = nouveau.Datedebut.Value!.Year,
+					Montant = bien.Loyer
+				};
+
+				await EvaluationsContext.AddAsync(locationparmoi);
+				await EvaluationsContext.SaveChangesAsync();
+				nouveau.Datedebut = nouveau.Datedebut.Value!.AddMonths(1);
+			}
+		}
     }
 }

@@ -1,6 +1,6 @@
 using Evaluation.Log.Interface;
 using Evaluation.Models;
-using Evaluation.Services;
+using Evaluation.Models.Csv;
 using Evaluation.Services.Interface;
 using Evaluation.Services.Utile;
 using EvaluationClasse;
@@ -16,7 +16,8 @@ namespace Evaluation.Controllers
         IClientService clientService,
         IAdminService adminService,
         IBienService bienService,
-        ILocationService location) : Controller
+        ILocationService location,
+        ITypeBienService typeBienService) : Controller
     {
         private readonly IRazorViewRenderer razorViewRenderer = razorViewRenderer;
         private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
@@ -25,6 +26,7 @@ namespace Evaluation.Controllers
         private readonly ILoggerManager loggerManager = logger;
         private readonly IBienService bienService = bienService;
         private readonly ILocationService locationService = location;
+        private readonly ITypeBienService TypeBienService = typeBienService;
 
         public async Task<IActionResult> Index()
         {
@@ -176,7 +178,10 @@ namespace Evaluation.Controllers
 
         public async Task<IActionResult> Import()
         {
-            return View();
+            return await Task.Run(IActionResult() =>
+            {
+                return View();
+            });
         }
 
         [HttpPost]
@@ -199,6 +204,13 @@ namespace Evaluation.Controllers
                 await bienService.CreateDataFromCSV(biens);
                 ViewData["success"] = "Tout les biens ont été ajouté avec succés";
             }
+            if(file.FileName.ToLower().Contains("commission"))
+            {
+                IEnumerable<Commissions> Commissions = await new CsvImporterService<Commissions>(loggerManager).ImportFromIFormFile(file);
+                await TypeBienService.CreateTypeBienFromCsv(Commissions);
+                ViewData["success"] = "Tout les types de bien ont été ajouté avec succès";
+
+			}
             return View();
         }
     }

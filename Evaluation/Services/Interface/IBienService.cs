@@ -9,5 +9,9 @@ namespace Evaluation.Services.Interface
 		public Task CreateDataFromCSV(IEnumerable<Evaluaton.Models.Csv.Bien> listes);
 		public Task<Dictionary<string, DateOnly>> AllBienToDictionnary(Client client);
 
+		public Task<IEnumerable<Bien>> SelectAllAsync();
+		public Task<Bien> SelectBienByIdWithLocations(string idbien);
+
+		public Task<bool> CheckValidite(Bien bien, Location location);
 	}
 }

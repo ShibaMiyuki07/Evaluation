@@ -26,6 +26,11 @@ namespace Evaluation.Services
             return await _context.Clients.Where(c => c.Idclient == idclient).FirstOrDefaultAsync()!;
         }
 
+        public async Task<IEnumerable<Client>> GetAllClient()
+        {
+            return await _context.Clients.Where(c => c.Numeroclient == null).ToListAsync();
+        }
+
         public async Task<string> CreateClientAsync(string numero)
         {
             Client cl = new()
