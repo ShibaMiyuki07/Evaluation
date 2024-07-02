@@ -35,7 +35,7 @@ create table location(idlocation char(10) primary key default concat('L00',nextv
 
 create table paye(idpaye char(10) primary key default concat('P00',nextval('idpaye')),idlocation char(10),moispaye int,anneepaye int, foreign key(idlocation) references location(idlocation));
 
-create table locationparmois(idlocationparmois char(10) primary key default concat('I00',nextval('idlocationparmois')),mois int,annee int,montant decimal(10,2),idlocation char(10),foreign key(idlocation) references location(idlocation));
+create table locationparmois(idlocationparmois char(10) primary key default concat('I00',nextval('idlocationparmois')),mois int,annee int,montant decimal(10,2),idlocation char(10),commission decimal(5,2),foreign key(idlocation) references location(idlocation));
 
 insert into admin(login,mdp) values('test','test');
 insert into client(numeroclient) values('0347001943');

@@ -220,7 +220,7 @@
                                                         <div class="product-info">
                                                             <div class="product-badge">
                                                                 <ul>
-                                                                    <li class="sale-badg">@l.Region</li>
+                                                                    <li class="sale-badg">@l.Nombien - @l.Region</li>
                                                                 </ul>
                                                             </div>
                                                             <h2 class="product-title"><a href="product-details.html">@l.Description</a></h2>
@@ -228,7 +228,7 @@
                                                         </div>
                                                         <div class="product-info-bottom">
                                                             <div class="product-price">
-                                                                <span>Ar @l.Loyer<label>/Mois</label></span>
+                                                                <span>Ar @decimal.Round((decimal)l.Loyer!)<label>/Mois</label></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -266,7 +266,7 @@
                                                 <div class="col-lg-12">
                                                     <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5">
                                                         <div class="product-img">
-                                                            @if (l.Photos! == null || l.Photos!.Split(";").Length == 0 || l.Photos! == string.Empty)
+                                                            @if (l.Photos! == null || l.Photos!.Split(";").Length == 1 || l.Photos! == string.Empty)
                                                             {
                                                                 <a href="product-details.html"><img src="~/img/product-3/1.jpg" alt="#"></a>
                                                             }
@@ -279,12 +279,12 @@
                                                             <div class="product-badge-price">
                                                                 <div class="product-badge">
                                                                     <ul>
-                                                                        <li class="sale-badg">@l.Region</li>
+                                                                        <li class="sale-badg">@l.Nombien - @l.Region</li>
                                                                     </ul>
                                                                 </div>
                                                                 <div>Disponibilite : @mois[listeDispo[l.Idbien].Month - 1].Item2 @listeDispo[l.Idbien].Year</div>
                                                                 <div class="product-price">
-                                                                    <span>Ar @l.Loyer <label>/Mois</label></span>
+                                                                    <span>Ar @decimal.Round((decimal)l.Loyer!) <label>/Mois</label></span>
                                                                 </div>
                                                             </div>
                                                             <h2 class="product-title"><a href="product-details.html">@l.Description</a></h2>

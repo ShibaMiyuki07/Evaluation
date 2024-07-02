@@ -38,7 +38,7 @@ namespace Evaluation.Controllers
             Dictionary<string, Dictionary<int, Dictionary<int, string>>> dicPaye = UtilsBien.ListPayeToDictionnary(liste_paye);
 
 
-            IEnumerable<Location> locations = await _LocationService.SerlectByIdAndDebut(client!,debut);
+            IEnumerable<Location> locations = await _LocationService.SelectByIdAndDebut(client!,debut);
 
             List<Tuple<string,Location, string>> final = UtilsBien.Payes(locations,dicPaye,debut,fin);
             ViewData["liste_final"] = final;

@@ -1,8 +1,5 @@
 ﻿@{
-    decimal? TotalChiffreAffaire = (decimal)ViewData["TotalChiffreAffaire"]!;
-    Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> GainParMois = (Dictionary<int, Dictionary<int, Dictionary<string, decimal>>>)ViewData["GainParMois"]!;
-    decimal? TotalCommission = (decimal)ViewData["TotalCommission"]!;
-    decimal ChiffreSansCommission = (decimal)ViewData["ChiffreSansCommission"]!;
+    Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> ChiffreParMois = (Dictionary<int, Dictionary<int, Dictionary<string, decimal>>>)ViewData["ChiffreParMois"]!;
 }
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -12,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Acceuil</title>
+    <title>Chiffre</title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -33,53 +30,91 @@
     <!--[if lte IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
     <![endif]-->
-
     <!-- Add your site or application content here -->
-
-<!-- Body main wrapper start -->
-<div class="body-wrapper">
+    <!-- Body main wrapper start -->
+    <div class="body-wrapper">
 
         <header class="ltn__header-area ltn__header-5 ltn__header-transparent--- gradient-color-4---">
-        <!-- ltn__header-top-area start -->
-        <div class="ltn__header-top-area section-bg-6 top-area-color-white---">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-7">
-                        <div class="ltn__top-bar-menu">
-                            <ul>
-                                <li><a href="mailto:info@webmail.com?Subject=Flower%20greetings%20to%20you"><i class="icon-mail"></i> manitrarakotoar@gmail.com</a></li>
-                                <li><a href="locations.html"><i class="icon-placeholder"></i> Antananarivo,Analamanga,MDG</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="top-bar-right text-end">
+            <!-- ltn__header-top-area start -->
+            <div class="ltn__header-top-area section-bg-6 top-area-color-white---">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-7">
                             <div class="ltn__top-bar-menu">
                                 <ul>
-                                    <li class="d-none">
-                                        <!-- ltn__language-menu -->
-                                        <div class="ltn__drop-menu ltn__currency-menu ltn__language-menu">
-                                            <ul>
-                                                <li>
-                                                    <a href="#" class="dropdown-toggle"><span class="active-currency">English</span></a>
+                                    <li><a href="mailto:info@webmail.com?Subject=Flower%20greetings%20to%20you"><i class="icon-mail"></i> manitrarakotoar@gmail.com</a></li>
+                                    <li><a href="locations.html"><i class="icon-placeholder"></i> Antananarivo,Analamanga,MDG</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="top-bar-right text-end">
+                                <div class="ltn__top-bar-menu">
+                                    <ul>
+                                        <li class="d-none">
+                                            <!-- ltn__language-menu -->
+                                            <div class="ltn__drop-menu ltn__currency-menu ltn__language-menu">
+                                                <ul>
+                                                    <li>
+                                                        <a href="#" class="dropdown-toggle"><span class="active-currency">English</span></a>
 
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <!-- ltn__social-media -->
-                                        <div class="ltn__social-media">
-                                            <ul>
-                                                <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                                                <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <!-- ltn__social-media -->
+                                            <div class="ltn__social-media">
+                                                <ul>
+                                                    <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                                                    <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
 
-                                                <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
-                                                <li><a href="#" title="Dribbble"><i class="fab fa-dribbble"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
+                                                    <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                                                    <li><a href="#" title="Dribbble"><i class="fab fa-dribbble"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ltn__header-top-area end -->
+            <!-- ltn__header-middle-area start -->
+            <div class="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-white">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="site-logo-wrap">
+                                <div class="site-logo">
+                                    <a href="index.html"><img src="~/img/logo.png" alt="Logo"></a>
+                                </div>
+                                <div class="get-support clearfix d-none">
+                                    <div class="get-support-icon">
+                                        <i class="icon-call"></i>
+                                    </div>
+                                    <div class="get-support-info">
+                                        <h6>Get Support</h6>
+                                        <h4><a href="tel:+123456789">123-456-789-10</a></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col ltn__header-options ltn__header-options-2 mb-sm-20">
+                            <!-- user-menu -->
+                            <div><a href="/Admin/Location">Location</a></div>
+                            <div><a href="/Admin/Index">Gain</a></div>
+                            <div class="ltn__drop-menu user-menu">
+                                <ul>
                                     <li>
+                                        <a href="#"><i class="icon-user"></i></a>
+                                        <ul>
+                                            <li><a href="/Home/Logout">Log out</a></li>
+                                        </ul>
                                     </li>
                                 </ul>
                             </div>
@@ -87,109 +122,33 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- ltn__header-top-area end -->
-        <!-- ltn__header-middle-area start -->
-        <div class="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-white">
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <div class="site-logo-wrap">
-                            <div class="site-logo">
-                                <a href="index.html"><img src="~/img/logo.png" alt="Logo"></a>
-                            </div>
-                            <div class="get-support clearfix d-none">
-                                <div class="get-support-icon">
-                                    <i class="icon-call"></i>
-                                </div>
-                                <div class="get-support-info">
-                                    <h6>Get Support</h6>
-                                    <h4><a href="tel:+123456789">123-456-789-10</a></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col ltn__header-options ltn__header-options-2 mb-sm-20">
-                        <!-- user-menu -->
-                        <div><a href="/Admin/Chiffre">Chiffre</a></div>
-                        <div><a href="/Admin/Location">Location</a></div>
-                        <div class="ltn__drop-menu user-menu">
-                            <ul>
-                                <li>
-                                    <a href="#"><i class="icon-user"></i></a>
-                                    <ul>
-                                        <li><a href="/Home/Logout">Log out</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- ltn__header-middle-area end -->
+            <!-- ltn__header-middle-area end -->
         </header>
         <!-- HEADER AREA END -->
 
 
-    <div class="ltn__utilize-overlay"></div>
+        <div class="ltn__utilize-overlay"></div>
 
-    <div class="ltn__login-area mb-120">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2">
-                    <div class="account-login-inner section-bg-1">
-                        <form action="/Admin/Index" method="post" class="ltn__form-box contact-form-box">
-                            <p class="text-center"> Choisissez les dates pour voirs vos gains durant l'intervalle </p>
-                            <label>Date Debut</label>
-                            <input type="text" name="debut" placeholder="Debut....">
-                            <label>Date Fin</label>
-                            <input type="text" name="fin" placeholder="Fin...">
-                            <div class="btn-wrapper mt-0 text-center">
-                                <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit">Valider</button>
-                            </div>
-                        </form>
+        <div class="ltn__login-area mb-120">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <div class="account-login-inner section-bg-1">
+                            <form action="/Admin/Chiffre" method="post" class="ltn__form-box contact-form-box">
+                                <p class="text-center"> Choisissez les dates pour voirs vos gains durant l'intervalle </p>
+                                <label>Date Debut</label>
+                                <input type="text" name="debut" placeholder="Debut....">
+                                <label>Date Fin</label>
+                                <input type="text" name="fin" placeholder="Fin...">
+                                <div class="btn-wrapper mt-0 text-center">
+                                    <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit">Valider</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- COUNTER UP AREA START -->
-    <div class="ltn__counterup-area section-bg-1 pt-120 pb-70">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item text-color-white---">
-                        <div class="counter-icon">
-                            <i class="flaticon-key"></i>
-                        </div>
-                            <h1><span>@decimal.Round((decimal)TotalCommission,2)</span></h1>
-                        <h6>Gain Via Commission total</h6>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item text-color-white---">
-                        <div class="counter-icon">
-                            <i class="flaticon-office"></i>
-                        </div>
-                            <h1><span>@decimal.Round((decimal)TotalChiffreAffaire,2)</span></h1>
-                        <h6>Chiffre d'affaire Total</h6>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6 align-self-center">
-                    <div class="ltn__counterup-item text-color-white---">
-                        <div class="counter-icon">
-                            <i class="flaticon-house"></i>
-                        </div>
-                            <h1><span>@decimal.Round(ChiffreSansCommission, 2)</span></h1>
-                        <h6>Chiffre Proprietaire total</h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- COUNTER UP AREA END -->
 
 
         <div>
@@ -203,11 +162,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var gain in GainParMois)
+                            @foreach (var gain in ChiffreParMois)
                             {
-                                @foreach(var t in GainParMois[gain.Key])
+                                @foreach (var t in ChiffreParMois[gain.Key])
                                 {
-                                    @foreach (var last in GainParMois[gain.Key][t.Key])
+                                    @foreach (var last in ChiffreParMois[gain.Key][t.Key])
                                     {
                                         <tr>
                                             <td>
@@ -217,7 +176,7 @@
                                             </td>
                                             <td>
                                                 <div class="ltn__my-properties-info">
-                                                    <small>@decimal.Round(last.Value,2) Ar</small>
+                                                    <small>@last.Value Ar</small>
                                                 </div>
                                             </td>
                                         </tr>
@@ -319,7 +278,7 @@
     <script src="~/js/plugins.js"></script>
     <!-- Main JS -->
     <script src="~/js/main.js"></script>
-  
+
 </body>
 
 <!-- Mirrored from tunatheme.com/tf/html/quarter-preview/quarter/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 29 Jun 2024 11:10:11 GMT -->

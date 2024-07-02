@@ -18,26 +18,121 @@ namespace EvaluationClasse
             decimal retour = 0;
             foreach (Location location in locations)
             {
-                retour += (decimal)((decimal)location.IdbienNavigation!.Loyer! * location.Duree)!;
+                IEnumerable<Locationparmoi> locationparmois = location.Locationparmois;
+                foreach(Locationparmoi parmoi in locationparmois)
+                {
+                    if(parmoi.Commission == decimal.Parse("100"))
+                    {
+                        retour += (decimal)parmoi.Montant! * 2;
+                    }
+                    else
+                    {
+                        retour += (decimal)parmoi.Montant!;
+                    }
+                }
             }
             return retour;
         }
 
+        public static Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> ChiffreParMois(IEnumerable<Location> locations)
+        {
+            List<Tuple<int, string>> mois = Constante.mois;
+            Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> a_retourner = [];
+            foreach (var location in locations)
+            {
+                IEnumerable<Locationparmoi> locationparmois = location.Locationparmois;
+                DateOnly DateDebutLocation = new(location.Datedebut!.Value.Year, location.Datedebut!.Value.Month, 1);
+                foreach (var l in locationparmois)
+                {
+                    DateOnly DateLocationMois = new((int)l.Annee!, (int)l.Mois!, 1);
+                    if (a_retourner.ContainsKey((int)l.Annee!))
+                    {
+                        if (a_retourner[(int)l.Annee].ContainsKey((int)l.Mois))
+                        {
+                            decimal add = a_retourner[(int)l.Annee][(int)l.Mois][mois[(int)l.Mois - 1].Item2];
+                            if (DateDebutLocation == DateLocationMois)
+                            {
+                                add += (decimal)l.Montant!;
+                            }
+                            add += (decimal)l.Montant!;
+
+
+                            a_retourner[(int)l.Annee][(int)l.Mois].Remove(mois[(int)l.Mois - 1].Item2);
+                            a_retourner[(int)l.Annee][(int)l.Mois].Add(mois[(int)l.Mois - 1].Item2, add);
+                        }
+                        else
+                        {
+                            Dictionary<string, decimal> final = new() { { mois[(int)l.Mois! - 1].Item2, ((decimal)l.Montant! )} };
+                            a_retourner[(int)l.Annee].Add((int)l.Mois, final);
+                        }
+                    }
+                    //L'annee n'existe pas
+                    else
+                    {
+                        Dictionary<string, decimal> final;
+                        if (DateDebutLocation == DateLocationMois)
+                        {
+                            final = new() { { mois[(int)l.Mois! - 1].Item2, (decimal)l.Montant!*2 } };
+                        }
+                        else
+                        {
+                            final = new() { { mois[(int)l.Mois! - 1].Item2, ((decimal)l.Montant!)} };
+                        }
+                        Dictionary<int, Dictionary<string, decimal>> a_ajouter = new() { { (int)l.Mois, final } };
+                        a_retourner.Add((int)l.Annee, a_ajouter);
+                    }
+                }
+
+            }
+            return a_retourner;
+        }
+
+        public static Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> ChiffreAffaireParMoisFiltre(Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> listemois, DateOnly debut, DateOnly fin)
+        {
+            Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> retour = [];
+
+            foreach (var annee in listemois)
+            {
+                if (annee.Key >= debut.Year && annee.Key <= fin.Year && debut.Year == fin.Year)
+                {
+                    retour.Add(annee.Key, new Dictionary<int, Dictionary<string, decimal>> { });
+                    foreach (var mois in listemois[annee.Key])
+                    {
+                        if (annee.Key >= debut.Year && debut.Year == fin.Year)
+                        {
+                            if (mois.Key >= debut.Month && mois.Key <= fin.Month)
+                            {
+                                retour[annee.Key].Add(mois.Key, listemois[annee.Key][mois.Key]);
+                            }
+                        }
+                    }
+                }
+                else if (annee.Key >= debut.Year && annee.Key <= fin.Year && debut.Year != fin.Year)
+                {
+                    retour.Add(annee.Key, listemois[annee.Key]);
+                }
+            }
+            return retour;
+        }
         public static decimal ChiffreAffaireFiltre(IEnumerable<Location> locations,DateOnly debut,DateOnly fin)
         {
             decimal retour = 0;
             foreach (Location location in locations)
             {
-                DateOnly final = location.Datedebut!.Value.AddMonths((int)location.Duree!);
-                DateOnly debutautre = location.Datedebut.Value;
-                if (location.Datedebut < debut)
+                foreach(var l in location.Locationparmois)
                 {
-                    debutautre = debut;
+                    //Date location
+                    DateOnly DateLocationParMois = new((int)l.Annee!,(int)l.Mois!,1);
+                    DateOnly DateDebut = new(location.Datedebut!.Value!.Year, location.Datedebut!.Value!.Month,1);
+                    if(DateDebut == debut)
+                    {
+                        retour += (decimal)l.Montant!*2;
+                    }
+                    else if(DateLocationParMois > debut && DateLocationParMois < fin)
+                    {
+                        retour += ((decimal)l.Montant!) ;
+                    }
                 }
-                int duree = 0;
-                UtilsBien.SetDuree(location, debut, fin, final);
-                duree = Duree(debutautre, fin, (int)location.Duree!);
-                retour += (decimal)(location.IdbienNavigation!.Loyer * duree)!;
             }
             return retour;
         }
@@ -45,17 +140,17 @@ namespace EvaluationClasse
         /*
             Calcul des commissions avec ou sans la duree
          */
-        public static decimal GainCommission(IEnumerable<Location> locations,bool avecDuree = true)
+        public static decimal GainCommission(IEnumerable<Location> locations)
         {
             decimal retour = 0;
             foreach (Location location in locations)
             {
-                if (avecDuree)
+                IEnumerable<Locationparmoi> locationparmois = location.Locationparmois;
+                foreach (Locationparmoi parmoi in locationparmois)
                 {
-                    retour += (decimal)((((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!) / 100) * location.Duree)!;
-                }
-                else retour += ((((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!) / 100))!;
 
+                    retour += (decimal)parmoi.Montant! * (decimal)parmoi.Commission!/100;
+                }
 			}
             return retour;
         }
@@ -63,17 +158,23 @@ namespace EvaluationClasse
         public static decimal GainCommissionFiltre(IEnumerable<Location> locations, DateOnly debut,DateOnly fin)
         {
             decimal retour = 0;
-            foreach (Location location in locations)
+            DateOnly DateDebutFiltre = new(debut.Year, debut.Month,1);
+			DateOnly DateFinFiltre = new(fin.Year,fin.Month,1);
+			foreach (Location location in locations)
             {
-                DateOnly final = location.Datedebut!.Value.AddMonths((int)location.Duree!);
-                if (location.Datedebut < debut)
+                DateOnly DateDebutLocation = new(location.Datedebut!.Value.Year, location.Datedebut!.Value.Month,1);
+                foreach(var l in location.Locationparmois)
                 {
-                    location.Datedebut = debut;
+                    DateOnly DateLocationMois = new((int)l.Annee!,(int)l.Mois!,1);
+                    if(DateDebutLocation == DateDebutFiltre)
+                    {
+                        retour +=(decimal) l.Montant!;
+                    }
+                    else if (DateDebutFiltre < DateLocationMois && DateLocationMois < DateFinFiltre)
+                    {
+                        retour += ((decimal) l.Montant!) * ((decimal) location.IdbienNavigation!.IdtypebienNavigation!.Commission!)/100;
+                    }
                 }
-                int duree = 0;
-                UtilsBien.SetDuree(location, debut, fin, final);
-                duree = Duree(location.Datedebut!.Value, fin, (int)location.Duree!);
-                retour += (decimal)((((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!) / 100) * duree)!;
 
             }
             return retour;
@@ -82,59 +183,86 @@ namespace EvaluationClasse
         /*
             Calcul des commissions par mois
          */
-        public static List<Tuple<int,string,decimal>> GainCommissionParMois(IEnumerable<Location> locations)
+        public static Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> GainCommissionParMois(IEnumerable<Location> locations)
         {
-            List<Tuple<int, string, decimal>> retour = [];
             List<Tuple<int, string>> mois = Constante.mois;
-
-            IEnumerable<MoisGain> LocationDateDebut = locations.GroupBy(l => l.Datedebut!.Value!.Month).Select(x => new MoisGain { Mois = x.Key, Amount = x.Sum(l => (decimal)l.IdbienNavigation!.Loyer!*(decimal)l.IdbienNavigation.IdtypebienNavigation!.Commission!)/100}).ToList();
-            for(int i=0; i<mois.Count;i++)
+            Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> a_retourner = [];
+            foreach (var location in locations)
             {
-                MoisGain MoisGain = LocationDateDebut.Where(x => x.Mois == mois[i].Item1).FirstOrDefault()!;
+                IEnumerable<Locationparmoi> locationparmois = location.Locationparmois;
+                DateOnly DateDebutLocation = new(location.Datedebut!.Value.Year, location.Datedebut!.Value.Month, 1);
+                foreach (var l in locationparmois)
+                {
+                    DateOnly DateLocationMois = new((int)l.Annee!, (int)l.Mois!, 1);
+                    if (a_retourner.ContainsKey((int)l.Annee!))
+                    {
+                        if (a_retourner[(int)l.Annee].ContainsKey((int)l.Mois))
+                        {
+                            decimal add = a_retourner[(int)l.Annee][(int)l.Mois][mois[(int)l.Mois - 1].Item2];
+                            if (DateDebutLocation == DateLocationMois)
+                            {
+                                add += (decimal)l.Montant!;
+                            }
+                            else
+                            {
+                                add += (decimal)l.Montant! * (decimal)l.Commission! / 100;
+                            }
 
-                /*
-                    Get All A Payer (datedebut + duree) - mois > 0
-                 */
-                IEnumerable<Location> MoisEnCours = locations.Where(x => (x.Datedebut!.Value.Month < mois[i].Item1 && (x.Datedebut.Value!.AddMonths((int) x.Duree!).Month - mois[i].Item1 >0))).ToList()!;
-                
-                decimal to_add = 0;
-                if(!MoisEnCours.Any() && MoisGain != null)
-                {
-                    to_add = MoisGain.Amount;
-                }
-                else if(MoisGain == null&& MoisEnCours.Any())
-                {
-                    foreach(Location location in MoisEnCours)
+
+                            a_retourner[(int)l.Annee][(int)l.Mois].Remove(mois[(int)l.Mois - 1].Item2);
+                            a_retourner[(int)l.Annee][(int)l.Mois].Add(mois[(int)l.Mois - 1].Item2, add);
+                        }
+                        else
+                        {
+                            Dictionary<string, decimal> final = new() { { mois[(int)l.Mois! - 1].Item2, ((decimal)l.Montant! * (decimal)l.Commission!) / 100 } };
+                            a_retourner[(int)l.Annee].Add((int)l.Mois, final);
+                        }
+                    }
+                    //L'annee n'existe pas
+                    else
                     {
-                        to_add += ((decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!)/100;
+                        Dictionary<string, decimal> final;
+                        if (DateDebutLocation == DateLocationMois)
+                        {
+                            final = new() { { mois[(int)l.Mois! - 1].Item2, (decimal)l.Montant! } };
+
+                        }
+                        else
+                        {
+                            final = new() { { mois[(int)l.Mois! - 1].Item2, ((decimal)l.Montant! * (decimal)location.IdbienNavigation!.IdtypebienNavigation!.Commission!) / 100 } };
+                        }
+                        Dictionary<int, Dictionary<string, decimal>> a_ajouter = new() { { (int)l.Mois, final } };
+                        a_retourner.Add((int)l.Annee, a_ajouter);
                     }
                 }
-                else if(MoisEnCours.Any() && MoisGain != null)
-                {
-                    foreach(Location location in MoisEnCours)
-                    {
-                        to_add += (decimal)location.IdbienNavigation!.Loyer! * (decimal)location.IdbienNavigation.IdtypebienNavigation!.Commission!/100;
-                    }
-                    to_add += MoisGain.Amount;
-                }
-                retour.Add(new Tuple<int, string, decimal>(mois[i].Item1, mois[i].Item2,to_add));
             }
-
-            return retour;
+            return a_retourner;
         }
 
         /*
             Filtre les commissions par mois en fonction des dates
          */
-        public static List<Tuple<int,string,decimal>> GainCommissionFiltreMois(List<Tuple<int,string,decimal>> listemois,DateOnly debut,DateOnly fin)
+        public static Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> GainCommissionFiltreMois(Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> listemois,DateOnly debut,DateOnly fin)
         {
-            List<Tuple<int, string, decimal>> retour = [];
+			Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> retour = [];
 
-			foreach (var l in listemois)
+			foreach (var annee in listemois)
             {
-                if(l.Item1 >= debut.Month && l.Item1 <= fin.Month)
+                if(annee.Key >=  debut.Year && annee.Key <= fin.Year && debut.Year == fin.Year)
                 {
-                    retour.Add(l);
+                    retour.Add(annee.Key,new Dictionary<int, Dictionary<string, decimal>>{ }) ;
+					foreach (var mois in listemois[annee.Key])
+					{
+                        DateOnly DebutMoisAnnee = new DateOnly(annee.Key, mois.Key, 1);
+                        if(DebutMoisAnnee >= debut && DebutMoisAnnee <= fin)
+                        {
+                            retour[annee.Key].Add(mois.Key, listemois[annee.Key][mois.Key]);
+                        }
+					}
+				}
+                else if(annee.Key >= debut.Year && annee.Key <= fin.Year && debut.Year != fin.Year)
+                {
+                    retour.Add(annee.Key, listemois[annee.Key]);
                 }
             }
             return retour;
@@ -162,18 +290,35 @@ namespace EvaluationClasse
         /*
             Calcul des chiffres d'affaires 
          */
-        public static decimal CalculChiffreAffaire(IEnumerable<Location> location,DateOnly fin)
+        public static decimal CalculChiffreAffaire(IEnumerable<Location> location,DateOnly debut,DateOnly fin)
         {
             decimal retour = 0;
-            foreach (var bien in location)
+            DateOnly DateDebutFiltre = new(debut.Year,debut.Month,1);
+            DateOnly DateFinFiltre = new(fin.Year,fin.Month,1);
+
+			foreach (var bien in location)
             {
-                retour += (decimal)((bien.IdbienNavigation!.Loyer - Commission(bien.IdbienNavigation)) * Duree((DateOnly)bien.Datedebut!,fin,(int)bien.Duree!))!;
+                DateOnly DateDebutLocation = new(bien.Datedebut!.Value.Year,bien.Datedebut!.Value.Month,1);
+                foreach (var l in bien.Locationparmois)
+                {
+                    DateOnly DebutLocationMois = new((int)l.Annee!, (int)l.Mois!, 1);
+                    if(DebutLocationMois >= DateDebutFiltre && DebutLocationMois <= DateFinFiltre)
+                    {
+                        if(DateDebutLocation == DebutLocationMois)
+                        {
+                            retour += (decimal)l.Montant!;
+                        }
+                        else
+                        {
+
+                            retour += ((decimal)l.Montant!) - (((decimal)l.Montant!) * ((decimal)l.Commission!)/100);
+                        }
+                    }
+                }
             }
             return retour;
         }
         #endregion
-
-        
 
         private static int CountArobase(string str)
         {

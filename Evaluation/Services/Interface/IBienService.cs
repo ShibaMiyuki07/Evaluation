@@ -12,6 +12,6 @@ namespace Evaluation.Services.Interface
 		public Task<IEnumerable<Bien>> SelectAllAsync();
 		public Task<Bien> SelectBienByIdWithLocations(string idbien);
 
-		public Task<bool> CheckValidite(Bien bien, Location location);
+		public Task<bool> CheckValidite(IEnumerable<Location> Locations, Location location);
 	}
 }

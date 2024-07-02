@@ -15,5 +15,7 @@ public partial class Locationparmoi
 
     public string? Idlocation { get; set; }
 
+    public decimal? Commission { get; set; }
+
     public virtual Location? IdlocationNavigation { get; set; }
 }

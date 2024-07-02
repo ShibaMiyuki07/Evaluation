@@ -194,23 +194,35 @@ namespace Evaluation.Controllers
             }
             if(file.FileName.ToLower().Contains("location"))
             {
-                IEnumerable<Evaluaton.Models.Csv.Location> locations = await new CsvImporterService<Evaluaton.Models.Csv.Location>(loggerManager).ImportFromIFormFile(file);
-                await locationService.CreateDataFromCSV(locations);
-                ViewData["success"] = "Toutes les locations ont été ajouté avec succés";
+                try
+                {
+                    IEnumerable<Evaluaton.Models.Csv.Location> locations = await new CsvImporterService<Evaluaton.Models.Csv.Location>(loggerManager).ImportFromIFormFile(file);
+                    await locationService.CreateDataFromCSV(locations);
+                    ViewData["success"] = "Toutes les locations ont été ajouté avec succés";
+                }
+                catch (Exception ex) { ViewData["erreur"] = ex.Message; }
             }
             if(file.FileName.ToLower().Contains("bien"))
             {
-                IEnumerable<Evaluaton.Models.Csv.Bien> biens = await new CsvImporterService<Evaluaton.Models.Csv.Bien>(loggerManager).ImportFromIFormFile(file);
-                await bienService.CreateDataFromCSV(biens);
-                ViewData["success"] = "Tout les biens ont été ajouté avec succés";
+                try
+                {
+                    IEnumerable<Evaluaton.Models.Csv.Bien> biens = await new CsvImporterService<Evaluaton.Models.Csv.Bien>(loggerManager).ImportFromIFormFile(file);
+                    await bienService.CreateDataFromCSV(biens);
+                    ViewData["success"] = "Tout les biens ont été ajouté avec succés";
+                }
+                catch (Exception ex) { ViewData["erreur"] = ex.Message; }
             }
             if(file.FileName.ToLower().Contains("commission"))
             {
-                IEnumerable<Commissions> Commissions = await new CsvImporterService<Commissions>(loggerManager).ImportFromIFormFile(file);
-                await TypeBienService.CreateTypeBienFromCsv(Commissions);
-                ViewData["success"] = "Tout les types de bien ont été ajouté avec succès";
+                try
+                {
+                    IEnumerable<Commissions> Commissions = await new CsvImporterService<Commissions>(loggerManager).ImportFromIFormFile(file);
+                    await TypeBienService.CreateTypeBienFromCsv(Commissions);
+                    ViewData["success"] = "Tout les types de bien ont été ajouté avec succès";
+                }
+                catch (Exception ex) { ViewData["erreur"] = ex.Message; }
 
-			}
+            }
             return View();
         }
     }

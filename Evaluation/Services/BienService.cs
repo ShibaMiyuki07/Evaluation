@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Evaluation.Services
 {
-    public class BienService(EvaluationsContext evaluationsContext,ITypeBienService typeBienService,IClientService clientService) : IBienService
+    public class BienService(EvaluationsContext evaluationsContext,
+		ITypeBienService typeBienService,
+		IClientService clientService) : IBienService
 	{
 		private readonly EvaluationsContext EvaluationsContext = evaluationsContext;
 		private readonly ITypeBienService typeBienService = typeBienService;
@@ -14,7 +16,7 @@ namespace Evaluation.Services
 
         public async Task<IEnumerable<Bien>> SelectBienByProprietaireAsync(Client client)
 		{
-			return await EvaluationsContext.Biens.Where(c => c.Idproprietaire == client.Idclient).ToListAsync();
+			return await EvaluationsContext.Biens.Include(c => c.Locations).Where(c => c.Idproprietaire == client.Idclient).ToListAsync();
 		}
 
 		public async Task<IEnumerable<Bien>> SelectBienProprietaireWithLocation(Client client)
@@ -29,26 +31,26 @@ namespace Evaluation.Services
 
 		public async Task<Bien> SelectBienByIdWithLocations(string idbien)
 		{
-			return await EvaluationsContext.Biens.Include(c => c.Locations).Where(c => c.Idbien == idbien).FirstOrDefaultAsync();
+			return await EvaluationsContext.Biens.Include(c => c.Locations).Include(c => c.IdtypebienNavigation).Where(c => c.Idbien == idbien).FirstOrDefaultAsync();
 		}
 
-		public async Task<bool> CheckValidite(Bien bien,Location location)
+		public async Task<bool> CheckValidite(IEnumerable<Location> Locations,Location location)
 		{
 			bool retour = true;
-			foreach(Location l in  bien.Locations)
+			foreach (var l in Locations)
 			{
-				DateOnly locationFin = l.Datedebut!.Value.AddMonths((int)l.Duree!);
-				if(location.Datedebut == l.Datedebut)
+				foreach (var lpm in l.Locationparmois)
 				{
-					throw new Exception("Date déjà prise");
-				}
-				if(location.Datedebut>l.Datedebut && l.Datedebut<locationFin)
-				{
-					throw new Exception("Le bien est en cours de location");
-				}
-				if(location.Datedebut<l.Datedebut && (location.Datedebut.Value!.AddMonths((int)location.Duree) < locationFin || location.Datedebut.Value!.AddMonths((int)location.Duree) >= locationFin))
-				{
-					throw new Exception("Il y a déjà une reservation entre cet intervalle");
+					for (int i = 0; i < location.Duree; i++)
+					{
+						if (location.Datedebut!.Value.Year == lpm.Annee)
+						{
+							if (location.Datedebut.Value.Month == lpm.Mois)
+							{
+								throw new Exception("Il y a une date déjà prise");
+							}
+						}
+					}
 				}
 			}
 			return retour;
@@ -59,21 +61,41 @@ namespace Evaluation.Services
 		{
 			Dictionary<string, DateOnly> retour = [];
 			IEnumerable<Bien> listes = await SelectBienProprietaireWithLocation(client);
-			foreach (Bien b in listes)
+			DateOnly Maintenant = DateOnly.FromDateTime(DateTime.Now);
+
+            foreach (Bien bien in listes)
 			{
-                //Check si date debut <= maintenant
-                b.Locations = b.Locations.OrderBy(c => c.Datedebut).ToList();
-                Location last = b.Locations.Last();
-				if(last.Datedebut <= DateOnly.FromDateTime(DateTime.Now))
+				foreach(Location location in bien.Locations)
 				{
-                    DateOnly dispo = last.Datedebut.Value!.AddMonths((int)last.Duree!);
-                    retour.Add(b.Idbien, dispo);
-                }
-				else
-				{
-                    DateOnly dispo = DateOnly.FromDateTime(DateTime.Now);
-                    retour.Add(b.Idbien, dispo);
-                }
+					DateOnly DateDebutLocation = new(location.Datedebut!.Value.Year, location.Datedebut!.Value.Month, 1);
+					if(DateDebutLocation <= Maintenant && DateDebutLocation.AddMonths((int)location.Duree!) > Maintenant)
+					{
+                            if (retour.ContainsKey(bien.Idbien))
+                            {
+								if (DateDebutLocation > Maintenant && DateDebutLocation >= retour[bien.Idbien])
+								{
+									retour.Remove(bien.Idbien);
+									if(DateDebutLocation.DayNumber - retour[bien.Idbien].DayNumber >= 30)
+									{
+										retour.Add(bien.Idbien, Maintenant);
+									}
+									else retour.Add(bien.Idbien, DateDebutLocation.AddMonths((int)location.Duree!));
+
+                            }
+							}
+							else retour.Add(bien.Idbien, DateDebutLocation.AddMonths((int)location.Duree!));
+                    }
+					else if(DateDebutLocation > Maintenant && DateDebutLocation > Maintenant.AddMonths(1))
+					{
+                        retour.Remove(bien.Idbien);
+                        retour.Add(bien.Idbien, Maintenant);
+                    }
+					else
+					{
+                        retour.Remove(bien.Idbien);
+                        retour.Add(bien.Idbien, Maintenant);
+                    }
+				}
             }
 			return retour;
 		}
@@ -90,7 +112,7 @@ namespace Evaluation.Services
 					client = new();
 					client!.Idclient = await clientService.CreateClientAsync(l.Proprietaire);
 				}
-				Bien nouveau = new Bien() 
+				Bien nouveau = new() 
 				{ 
 					Idbien = l.Reference,
 					Nombien = l.Nom,

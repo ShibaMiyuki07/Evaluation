@@ -23,6 +23,7 @@ namespace Evaluation.Controllers
             Index avec le total des gains , les gains par mois, chiffre d'affaire sans commission
          */
         public async Task<IActionResult> Index()
+        
         {
             if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
             {
@@ -30,15 +31,15 @@ namespace Evaluation.Controllers
             }
             IEnumerable<Location> locations = await LocationService.SelectAllAsync();
 
-            decimal TotalChiffreAffaire = Utils.ChiffreAffaireSansDate(locations);
+            decimal TotalChiffreAffaire = decimal.Round(Utils.ChiffreAffaireSansDate(locations),2);
             ViewData["TotalChiffreAffaire"] = TotalChiffreAffaire;
 
 
-            decimal TotalCommission = Utils.GainCommission(locations);
+            decimal TotalCommission = decimal.Round(Utils.GainCommission(locations), 2);
             ViewData["TotalCommission"] = TotalCommission;
 
 
-            List<Tuple<int,string,decimal>> GainParMois = Utils.GainCommissionParMois(locations);
+			Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> GainParMois = Utils.GainCommissionParMois(locations);
             ViewData["GainParMois"] = GainParMois;
 
 
@@ -65,7 +66,7 @@ namespace Evaluation.Controllers
 			ViewData["TotalCommission"] = TotalCommissionFiltre;
 
 
-			List<Tuple<int, string, decimal>> GainParMoisFiltre = Utils.GainCommissionParMois(locations);
+			Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> GainParMoisFiltre = Utils.GainCommissionParMois(locations);
             GainParMoisFiltre = Utils.GainCommissionFiltreMois(GainParMoisFiltre, debut,fin);
             ViewData["GainParMois"] = GainParMoisFiltre;
 
@@ -127,6 +128,8 @@ namespace Evaluation.Controllers
 
 			#region Create Location
 			Location location = new();
+            location.Idclient = client.Idclient;
+            location.Idbien = bien.Idbien;
             try
             {
 				int IntDuree = int.Parse(duree);
@@ -147,15 +150,44 @@ namespace Evaluation.Controllers
 
             try
             {
-                bool CheckValidite = await BienService.CheckValidite(bien, location);
+                IEnumerable<Location> Locations = await LocationService.SelectByIdBien(bien.Idbien);
+                bool CheckValidite = await BienService.CheckValidite(Locations, location);
                 if(CheckValidite)
                 {
                     await LocationService.CreateLocation(location);
                 }
             }
             catch(Exception e) { ViewData["erreur"] = e.Message;return await Location(); }
-			#endregion
-			return View();
+            #endregion
+
+            ViewData["success"] = "Location ajouté";
+			return await Location();
+        }
+
+        public async Task<IActionResult> Chiffre()
+        {
+            if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            IEnumerable<Location> locations = await LocationService.SelectAllAsync();
+            Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> ChiffreParMois = Utils.ChiffreParMois(locations);
+            ViewData["ChiffreParMois"] = ChiffreParMois;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Chiffre(DateOnly debut,DateOnly fin)
+        {
+            if (ContextAccessor.HttpContext!.Session.GetString("id") == null || ContextAccessor.HttpContext!.Session.GetString("id")!.Contains("A00"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            IEnumerable<Location> locations = await LocationService.SelectAllAsync();
+            Dictionary<int, Dictionary<int, Dictionary<string, decimal>>> ChiffreParMois = Utils.ChiffreParMois(locations);
+            ChiffreParMois = Utils.GainCommissionFiltreMois(ChiffreParMois, debut, fin);
+            ViewData["ChiffreParMois"] = ChiffreParMois;
+            return View();
         }
     }
 }

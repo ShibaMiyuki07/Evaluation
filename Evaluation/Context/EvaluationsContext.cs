@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using EvaluationClasse;
 
-namespace Evaluation.Context;
+namespace Evaluation;
 
 public partial class EvaluationsContext : DbContext
 {
@@ -162,6 +162,9 @@ public partial class EvaluationsContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("idlocationparmois");
             entity.Property(e => e.Annee).HasColumnName("annee");
+            entity.Property(e => e.Commission)
+                .HasPrecision(4, 2)
+                .HasColumnName("commission");
             entity.Property(e => e.Idlocation)
                 .HasMaxLength(10)
                 .IsFixedLength()
@@ -219,13 +222,13 @@ public partial class EvaluationsContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("type");
         });
-        modelBuilder.HasSequence("idadmin");
-        modelBuilder.HasSequence("idbien");
-        modelBuilder.HasSequence("idclient");
-        modelBuilder.HasSequence("idlocation");
-        modelBuilder.HasSequence("idlocationparmois");
+        modelBuilder.HasSequence("idadmin").HasMin(0L);
+        modelBuilder.HasSequence("idbien").HasMin(0L);
+        modelBuilder.HasSequence("idclient").HasMin(0L);
+        modelBuilder.HasSequence("idlocation").HasMin(0L);
+        modelBuilder.HasSequence("idlocationparmois").HasMin(0L);
         modelBuilder.HasSequence("idpaye");
-        modelBuilder.HasSequence("idtypebien");
+        modelBuilder.HasSequence("idtypebien").HasMin(0L);
 
         OnModelCreatingPartial(modelBuilder);
     }

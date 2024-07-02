@@ -8,7 +8,7 @@ namespace Evaluaton.Models.Csv
         public string Reference { get; set; } = string.Empty;
 
         [Name("Date debut")]
-        public DateOnly DateDebut {  get; set; }
+        public string DateDebut {  get; set; }
 
         [Name("duree mois")]
         public int Duree {  get; set; } 

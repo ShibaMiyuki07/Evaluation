@@ -45,8 +45,8 @@ namespace Evaluation.Controllers
 			if (HttpContextAccessor.HttpContext!.Session.GetString("id") == null) return RedirectToAction("Index", "Home");
 			string t = HttpContextAccessor.HttpContext!.Session.GetString("id")!;
 			Client? proprietaire = await ClientService.GetClientByIdAsync(t)!;
-            IEnumerable<Location> locations = await LocationService.SelectWithFiltre(debut, proprietaire!);
-            decimal total = Utils.CalculChiffreAffaire(locations, fin);
+            IEnumerable<Location> locations = await LocationService.SelectAllByIdProprietaire(proprietaire!);
+            decimal total = decimal.Round(Utils.CalculChiffreAffaire(locations, debut, fin),2);
             ViewData["total"] = total;
             return View("Chiffre");
         }
