@@ -1,6 +1,6 @@
 ﻿@using EvaluationClasse
 @{
-    List<Tuple<string, Location, string>> listes = (List<Tuple<string, Location, string>>)ViewData["liste_final"]!;
+    List<Tuple<string, int, int, Location, string>> listes = (List<Tuple<string, int, int, Location, string>>)ViewData["liste_final"]!;
 }
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -197,32 +197,39 @@
                                                 <div class="col-lg-4 col-sm-6 col-12">
                                                     <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5 text-center---">
                                                         <div class="product-img">
-                                                            @if (liste.Item2.IdbienNavigation!.Photos! == null ||liste.Item2.IdbienNavigation.Photos!.Split(";").Length == 0 || liste.Item2.IdbienNavigation.Photos! == string.Empty)
+                                                            @if (liste.Item4.IdbienNavigation!.Photos! == null ||liste.Item4.IdbienNavigation.Photos!.Split(";").Length == 0 || liste.Item4.IdbienNavigation.Photos! == string.Empty)
                                                             {
                                                                 <a href="product-details.html"><img src="~/img/product-3/1.jpg" alt="#"></a>
                                                             }
                                                             else
                                                             {
-                                                                <a href="product-details.html"><img src="~/img/@liste.Item2.IdbienNavigation.Photos.Split(";")[0]" alt="#"></a>
+                                                                <a href="product-details.html"><img src="~/img/@liste.Item4.IdbienNavigation.Photos.Split(";")[0]" alt="#"></a>
                                                             }
                                                         </div>
                                                         <div class="product-info">
                                                             <div class="product-badge">
                                                                 <ul>
-                                                                    <li class="sale-badg">@liste.Item3</li>
+                                                                    <li class="sale-badg">@liste.Item5</li>
                                                                 </ul>
                                                             </div>
-                                                            <h2 class="product-title"><a href="product-details.html">@liste.Item2.IdbienNavigation!.Nombien</a></h2>
+                                                            <h2 class="product-title"><a href="product-details.html">@liste.Item4.IdbienNavigation!.Nombien</a></h2>
                                                             <ul class="ltn__list-item-2--- ltn__list-item-2-before--- ltn__plot-brief">
                                                                 <li>
                                                                     <span>@liste.Item1 </span>
-                                                                    @liste.Item2.Datedebut!.Value.Year
+                                                                    @liste.Item4.Datedebut!.Value.Year
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                         <div class="product-info-bottom">
                                                             <div class="product-price">
-                                                                <span>Ar @liste.Item2.IdbienNavigation.Loyer<label>/Mois</label></span>
+                                                                @if (new DateOnly(liste.Item4.Datedebut!.Value.Year, liste.Item4.Datedebut.Value.Month, 1) == new DateOnly(liste.Item3, liste.Item2, 1))
+                                                                {
+                                                                    <span>Ar @(liste.Item4.IdbienNavigation.Loyer * 2)</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span>Ar @(liste.Item4.IdbienNavigation.Loyer)</span>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>
@@ -260,32 +267,39 @@
                                                 <div class="col-lg-12">
                                                     <div class="ltn__product-item ltn__product-item-4 ltn__product-item-5">
                                                         <div class="product-img">
-                                                            @if (liste.Item2.IdbienNavigation!.Photos! == null || liste.Item2.IdbienNavigation.Photos!.Split(";").Length == 0 || liste.Item2.IdbienNavigation.Photos! == string.Empty)
+                                                            @if (liste.Item4.IdbienNavigation!.Photos! == null || liste.Item4.IdbienNavigation.Photos!.Split(";").Length == 0 || liste.Item4.IdbienNavigation.Photos! == string.Empty)
                                                             {
                                                                 <a href="product-details.html"><img src="~/img/product-3/1.jpg" alt="#"></a>
                                                             }
                                                             else
                                                             {
-                                                                <a href="product-details.html"><img src="~/img/@liste.Item2.IdbienNavigation.Photos.Split(";")[0]" alt="#"></a>
+                                                                <a href="product-details.html"><img src="~/img/@liste.Item4.IdbienNavigation.Photos.Split(";")[0]" alt="#"></a>
                                                             }
                                                         </div>
                                                         <div class="product-info">
                                                             <div class="product-badge-price">
                                                                 <div class="product-badge">
                                                                     <ul>
-                                                                        <li class="sale-badg">@liste.Item3</li>
+                                                                        <li class="sale-badg">@liste.Item5</li>
                                                                     </ul>
                                                                 </div>
                                                                 <div class="product-price">
-                                                                    <span>Ar @liste.Item2.IdbienNavigation.Loyer <label>/Mois</label></span>
+                                                                    @if (new DateOnly(liste.Item4.Datedebut!.Value.Year, liste.Item4.Datedebut.Value.Month, 1) == new DateOnly(liste.Item3,liste.Item2,1))
+                                                                    {
+                                                                        <span>Ar @(liste.Item4.IdbienNavigation.Loyer * 2)</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>Ar @(liste.Item4.IdbienNavigation.Loyer)</span>
+                                                                    }
                                                                 </div>
                                                             </div>
-                                                            <h2 class="product-title"><a href="product-details.html">@liste.Item2.IdbienNavigation.Nombien</a></h2>
+                                                            <h2 class="product-title"><a href="product-details.html">@liste.Item4.IdbienNavigation.Nombien</a></h2>
                                                             
                                                             <ul class="ltn__list-item-2--- ltn__list-item-2-before--- ltn__plot-brief">
                                                                 <li>
                                                                     <span>@liste.Item1 </span>
-                                                                    @liste.Item2.Datedebut!.Value.Year
+                                                                    @liste.Item4.Datedebut!.Value.Year
                                                                 </li>
                                                             </ul>
                                                         </div>

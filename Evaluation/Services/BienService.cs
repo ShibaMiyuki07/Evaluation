@@ -1,5 +1,6 @@
 ﻿using EFCore.BulkExtensions;
 using Evaluation.Context;
+using Evaluation.Log.Interface;
 using Evaluation.Services.Interface;
 using EvaluationClasse;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +9,13 @@ namespace Evaluation.Services
 {
     public class BienService(EvaluationsContext evaluationsContext,
 		ITypeBienService typeBienService,
-		IClientService clientService) : IBienService
+		IClientService clientService,
+		ILoggerManager loggerManager) : IBienService
 	{
 		private readonly EvaluationsContext EvaluationsContext = evaluationsContext;
 		private readonly ITypeBienService typeBienService = typeBienService;
 		private readonly IClientService clientService = clientService;
+		private readonly ILoggerManager LoggerManager = loggerManager;
 
         public async Task<IEnumerable<Bien>> SelectBienByProprietaireAsync(Client client)
 		{
@@ -102,6 +105,7 @@ namespace Evaluation.Services
 
 		public async Task CreateDataFromCSV(IEnumerable<Evaluaton.Models.Csv.Bien> listes)
 		{
+			LoggerManager.LogInfo("Creating Data from CSV");
 			List<Bien> lists = [];
 			foreach(var l in listes)
 			{
@@ -126,6 +130,7 @@ namespace Evaluation.Services
 			}
 			await EvaluationsContext.BulkInsertAsync(lists);
 			await EvaluationsContext.SaveChangesAsync();
+			LoggerManager.LogInfo($"Data with {lists.Count} row Created");
 		}
 	}
 }

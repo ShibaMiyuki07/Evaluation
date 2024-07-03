@@ -91,8 +91,10 @@ namespace Evaluation.Services.Utile
         {
             return await Task.Run(() =>
             {
+                _logger.LogInfo($"Get {typeof(T).Name} from CSV");
                 var csv = new CsvReader(reader, config);
                 line = csv.GetRecords<T>().ToList();
+                _logger.LogInfo($"Got {typeof(T).Name} from CSV");
                 return line;
             });
         }

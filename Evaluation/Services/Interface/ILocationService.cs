@@ -18,6 +18,8 @@ namespace Evaluation.Services.Interface
         public Task<IEnumerable<Location>> SelectByIdBien(string idbien);
 
         public Task<IEnumerable<Location>> SelectAllByIdProprietaire(Client proprietaire);
+        public  Task<Location> SelectByIdLocation(string idlocation);
+		public Task<bool> CheckDispo(Location nouveau, Bien bien);
 
 
     }

@@ -67,7 +67,7 @@ namespace Evaluation.Controllers
                         {
                             retour = await HomeToClient(admin);
                         }
-                        catch (Exception ex) { }
+                        catch { }
                     }
                     #endregion
 
@@ -78,7 +78,7 @@ namespace Evaluation.Controllers
                         {
                             retour = await HomeToProprietaire(admin);
                         }
-                        catch(Exception ex) { }
+                        catch { }
                     }
                     #endregion
                 }
@@ -192,7 +192,7 @@ namespace Evaluation.Controllers
                 ViewData["erreur"] = "Fichier invalide"; 
                 return View();
             }
-            if(file.FileName.ToLower().Contains("location"))
+            if(file.FileName.Contains("location", StringComparison.CurrentCultureIgnoreCase))
             {
                 try
                 {
@@ -202,7 +202,7 @@ namespace Evaluation.Controllers
                 }
                 catch (Exception ex) { ViewData["erreur"] = ex.Message; }
             }
-            if(file.FileName.ToLower().Contains("bien"))
+            if(file.FileName.Contains("bien", StringComparison.CurrentCultureIgnoreCase))
             {
                 try
                 {
@@ -212,7 +212,7 @@ namespace Evaluation.Controllers
                 }
                 catch (Exception ex) { ViewData["erreur"] = ex.Message; }
             }
-            if(file.FileName.ToLower().Contains("commission"))
+            if(file.FileName.Contains("commission", StringComparison.CurrentCultureIgnoreCase))
             {
                 try
                 {

@@ -124,12 +124,14 @@ namespace Evaluation.Controllers
                 ViewData["erreur"] = "Veuillez selectionner un client";
                 return await Location();
             }
-			#endregion
+            #endregion
 
-			#region Create Location
-			Location location = new();
-            location.Idclient = client.Idclient;
-            location.Idbien = bien.Idbien;
+            #region Create Location
+            Location location = new()
+            {
+                Idclient = client.Idclient,
+                Idbien = bien.Idbien
+            };
             try
             {
 				int IntDuree = int.Parse(duree);
@@ -188,6 +190,23 @@ namespace Evaluation.Controllers
             ChiffreParMois = Utils.GainCommissionFiltreMois(ChiffreParMois, debut, fin);
             ViewData["ChiffreParMois"] = ChiffreParMois;
             return View();
+        }
+
+
+        public async Task<IActionResult> Liste()
+        {
+            IEnumerable<Location> locations = await LocationService.SelectAllAsync();
+            ViewData["ListeLocation"] = locations;
+            return View("ListeLocation");
+        }
+
+
+        public async Task<IActionResult> Details()
+        {
+            string idlocation = ContextAccessor.HttpContext!.Request.Path.Value!.Split("/")[3];
+            Location details = await LocationService.SelectByIdLocation(idlocation);
+            ViewData["details"] = details;
+            return View("DetailLocation");
         }
     }
 }

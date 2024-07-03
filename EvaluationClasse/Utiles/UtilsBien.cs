@@ -12,45 +12,46 @@ namespace EvaluationClasse.Utiles
         /*
             Change la liste des paye en dictionnaire
          */
-        public static Dictionary<string, Dictionary<int, Dictionary<int, string>>> ListPayeToDictionnary(IEnumerable<Paye> liste)
-        {
-            Dictionary<string, Dictionary<int, Dictionary<int, string>>> retour = [];
-            foreach (Paye paye in liste)
-            {
-                if (!retour.TryGetValue(paye.Idlocation, out Dictionary<int, Dictionary<int, string>>? value))
-                {
-                    value = ([]);
-                    retour[paye.Idlocation] = value;
-                }
-                Dictionary<int, string> last = new() { { (int)paye.Moispaye!, "Paye" } };
-                value.Add((int)paye.Anneepaye!, last);
-            }
-            return retour;
-        }
+        //public static Dictionary<string, Dictionary<int, Dictionary<int, string>>> ListPayeToDictionnary(IEnumerable<Paye> liste)
+        //{
+        //    Dictionary<string, Dictionary<int, Dictionary<int, string>>> retour = [];
+        //    foreach (Paye paye in liste)
+        //    {
+        //        if (!retour.TryGetValue(paye.Idlocation, out Dictionary<int, Dictionary<int, string>>? value))
+        //        {
+        //            value = ([]);
+        //            retour[paye.Idlocation] = value;
+        //        }
+        //        Dictionary<int, string> last = new() { { (int)paye.Moispaye!, "Paye" } };
+        //        value.Add((int)paye.Anneepaye!, last);
+        //    }
+        //    return retour;
+        //}
 
         /**
          * Check les payes
          * Paye jusqu'a maintenant
          */
-        public static List<Tuple<string, Location, string>> Payes(IEnumerable<Location> locations, Dictionary<string, Dictionary<int, Dictionary<int, string>>> paye, DateOnly debut, DateOnly fin)
+        public static List<Tuple<string,int,int, Location, string>> Payes(IEnumerable<Location> locations, DateOnly debut, DateOnly fin)
         {
-            List<Tuple<string, Location, string>> retour = [];
+            List<Tuple<string,int,int, Location, string>> retour = [];
+            DateOnly DateDebutFiltre = new(debut.Year,debut.Month,1);
+            DateOnly DateFinFiltre = new(fin.Year,fin.Month,1);
             foreach (var location in locations)
             {
-                DateOnly final = location.Datedebut!.Value.AddMonths((int)location.Duree!);
-                int duree = 0;
-                SetDuree(location, debut, fin, final);
-                duree = Utils.Duree(location.Datedebut!.Value, fin, (int)location.Duree!);
-                for (int i = 0; i < duree; i++)
+                foreach(var lpm in location.Locationparmois)
                 {
-                    string status = "Non Paye";
-                    if (location.Datedebut.Value.Month <= DateTime.Now.Month  && location.Datedebut.Value.Year <= DateTime.Now.Year)
+                    DateOnly DateLocationParMois = new((int)lpm.Annee!,(int)lpm.Mois!,1) ;
+                    if(DateLocationParMois >=DateDebutFiltre && DateLocationParMois<=DateFinFiltre)
                     {
-                        status = "Paye";
-                    }
+                        string status = "Non Paye";
+                        if (location.Datedebut!.Value.Month <= DateTime.Now.Month && location.Datedebut.Value.Year <= DateTime.Now.Year)
+                        {
+                            status = "Paye";
+                        }
 
-                    retour.Add(new Tuple<string, Location, string>(Constante.mois[location.Datedebut.Value.Month - 1].Item2, location, status));
-                    location.Datedebut = location.Datedebut.Value.AddMonths(1);
+                        retour.Add(new Tuple<string,int,int, Location, string>(Constante.mois[DateLocationParMois.Month - 1].Item2, DateLocationParMois.Month,DateLocationParMois.Year, location, status));
+                    }
                 }
             }
             return retour;
@@ -69,21 +70,21 @@ namespace EvaluationClasse.Utiles
             }
         }
 
-        public static string GetStatus(Location location, Dictionary<string, Dictionary<int, Dictionary<int, string>>> paye)
-        {
-            string status = "Non Payé";
-            if (paye.ContainsKey(location.Idlocation))
-            {
-                if (paye[location.Idlocation].ContainsKey(location.Datedebut!.Value.Year))
-                {
-                    if (paye[location.Idlocation][location.Datedebut.Value.Year].ContainsKey(location.Datedebut.Value.Month))
-                    {
-                        status = paye[location.Idlocation][location.Datedebut.Value.Year][location.Datedebut.Value.Month];
-                    }
-                }
-            }
-            return status;
-        }
+        //public static string GetStatus(Location location, Dictionary<string, Dictionary<int, Dictionary<int, string>>> paye)
+        //{
+        //    string status = "Non Payé";
+        //    if (paye.ContainsKey(location.Idlocation))
+        //    {
+        //        if (paye[location.Idlocation].ContainsKey(location.Datedebut!.Value.Year))
+        //        {
+        //            if (paye[location.Idlocation][location.Datedebut.Value.Year].ContainsKey(location.Datedebut.Value.Month))
+        //            {
+        //                status = paye[location.Idlocation][location.Datedebut.Value.Year][location.Datedebut.Value.Month];
+        //            }
+        //        }
+        //    }
+        //    return status;
+        //}
         #endregion
     }
 }

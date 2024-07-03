@@ -1,0 +1,32 @@
+2024-07-02 10:14:42.3168|INFO|Evaluation.Log.LoggerManager|Get Location from CSV
+2024-07-02 10:14:42.3603|INFO|Evaluation.Log.LoggerManager|Got Location from CSV
+2024-07-02 10:16:31.9129|WARN|Evaluation.Log.LoggerManager|Starting to Delete all data from database
+2024-07-02 10:16:32.0104|INFO|Evaluation.Log.LoggerManager|End of deletion
+2024-07-02 10:16:39.2931|INFO|Evaluation.Log.LoggerManager|Get Commissions from CSV
+2024-07-02 10:16:39.3204|INFO|Evaluation.Log.LoggerManager|Got Commissions from CSV
+2024-07-02 10:16:42.9287|INFO|Evaluation.Log.LoggerManager|Get Bien from CSV
+2024-07-02 10:16:42.9287|INFO|Evaluation.Log.LoggerManager|Got Bien from CSV
+2024-07-02 10:16:42.9453|INFO|Evaluation.Log.LoggerManager|Creating Data from CSV
+2024-07-02 10:16:43.0483|INFO|Evaluation.Log.LoggerManager|Data with 4 row Created
+2024-07-02 10:16:46.2319|INFO|Evaluation.Log.LoggerManager|Get Location from CSV
+2024-07-02 10:16:46.2319|INFO|Evaluation.Log.LoggerManager|Got Location from CSV
+2024-07-02 10:18:26.3779|WARN|Evaluation.Log.LoggerManager|Starting to Delete all data from database
+2024-07-02 10:18:26.4125|INFO|Evaluation.Log.LoggerManager|End of deletion
+2024-07-02 10:28:48.1721|INFO|Evaluation.Log.LoggerManager|Get Commissions from CSV
+2024-07-02 10:28:48.2133|INFO|Evaluation.Log.LoggerManager|Got Commissions from CSV
+2024-07-02 10:28:51.9837|INFO|Evaluation.Log.LoggerManager|Get Bien from CSV
+2024-07-02 10:28:51.9887|INFO|Evaluation.Log.LoggerManager|Got Bien from CSV
+2024-07-02 10:28:51.9887|INFO|Evaluation.Log.LoggerManager|Creating Data from CSV
+2024-07-02 10:28:52.3379|INFO|Evaluation.Log.LoggerManager|Data with 4 row Created
+2024-07-02 10:28:55.3905|INFO|Evaluation.Log.LoggerManager|Get Location from CSV
+2024-07-02 10:28:55.3948|INFO|Evaluation.Log.LoggerManager|Got Location from CSV
+2024-07-02 10:31:56.9518|WARN|Evaluation.Log.LoggerManager|Starting to Delete all data from database
+2024-07-02 10:31:57.0535|INFO|Evaluation.Log.LoggerManager|End of deletion
+2024-07-02 11:14:30.4298|INFO|Evaluation.Log.LoggerManager|Get Commissions from CSV
+2024-07-02 11:14:30.4641|INFO|Evaluation.Log.LoggerManager|Got Commissions from CSV
+2024-07-02 11:14:35.2846|INFO|Evaluation.Log.LoggerManager|Get Bien from CSV
+2024-07-02 11:14:35.2846|INFO|Evaluation.Log.LoggerManager|Got Bien from CSV
+2024-07-02 11:14:35.2846|INFO|Evaluation.Log.LoggerManager|Creating Data from CSV
+2024-07-02 11:14:35.5223|INFO|Evaluation.Log.LoggerManager|Data with 6 row Created
+2024-07-02 11:14:38.6763|INFO|Evaluation.Log.LoggerManager|Get Location from CSV
+2024-07-02 11:14:38.6763|INFO|Evaluation.Log.LoggerManager|Got Location from CSV

@@ -52,9 +52,12 @@ namespace EvaluationClasse
                             decimal add = a_retourner[(int)l.Annee][(int)l.Mois][mois[(int)l.Mois - 1].Item2];
                             if (DateDebutLocation == DateLocationMois)
                             {
+                                add += (decimal)l.Montant!*2;
+                            }
+                            else
+                            {
                                 add += (decimal)l.Montant!;
                             }
-                            add += (decimal)l.Montant!;
 
 
                             a_retourner[(int)l.Annee][(int)l.Mois].Remove(mois[(int)l.Mois - 1].Item2);
@@ -62,7 +65,16 @@ namespace EvaluationClasse
                         }
                         else
                         {
-                            Dictionary<string, decimal> final = new() { { mois[(int)l.Mois! - 1].Item2, ((decimal)l.Montant! )} };
+
+                            Dictionary<string, decimal> final;
+                            if (DateDebutLocation == DateLocationMois)
+                            {
+                                final = new() { { mois[(int)l.Mois! - 1].Item2, ((decimal)l.Montant!) *2} };
+                            }
+                            else
+                            {
+                                final = new() { { mois[(int)l.Mois! - 1].Item2, ((decimal)l.Montant!) } };
+                            }
                             a_retourner[(int)l.Annee].Add((int)l.Mois, final);
                         }
                     }
@@ -95,7 +107,7 @@ namespace EvaluationClasse
             {
                 if (annee.Key >= debut.Year && annee.Key <= fin.Year && debut.Year == fin.Year)
                 {
-                    retour.Add(annee.Key, new Dictionary<int, Dictionary<string, decimal>> { });
+                    retour.Add(annee.Key, []);
                     foreach (var mois in listemois[annee.Key])
                     {
                         if (annee.Key >= debut.Year && debut.Year == fin.Year)
@@ -117,6 +129,8 @@ namespace EvaluationClasse
         public static decimal ChiffreAffaireFiltre(IEnumerable<Location> locations,DateOnly debut,DateOnly fin)
         {
             decimal retour = 0;
+            DateOnly DateDebutFiltre = new(debut.Year,debut.Month,1);
+            DateOnly DateFinFiltre = new(fin.Year,fin.Month,1);
             foreach (Location location in locations)
             {
                 foreach(var l in location.Locationparmois)
@@ -124,13 +138,16 @@ namespace EvaluationClasse
                     //Date location
                     DateOnly DateLocationParMois = new((int)l.Annee!,(int)l.Mois!,1);
                     DateOnly DateDebut = new(location.Datedebut!.Value!.Year, location.Datedebut!.Value!.Month,1);
-                    if(DateDebut == debut)
+                    if(DateLocationParMois >= DateDebutFiltre && DateFinFiltre >= DateLocationParMois)
                     {
-                        retour += (decimal)l.Montant!*2;
-                    }
-                    else if(DateLocationParMois > debut && DateLocationParMois < fin)
-                    {
-                        retour += ((decimal)l.Montant!) ;
+                        if (DateLocationParMois == DateDebut)
+                        {
+                            retour += (decimal)l.Montant! * 2;
+                        }
+                        else
+                        {
+                            retour += ((decimal)l.Montant!);
+                        }
                     }
                 }
             }
@@ -166,13 +183,16 @@ namespace EvaluationClasse
                 foreach(var l in location.Locationparmois)
                 {
                     DateOnly DateLocationMois = new((int)l.Annee!,(int)l.Mois!,1);
-                    if(DateDebutLocation == DateDebutFiltre)
+                    if(DateLocationMois >= DateDebutFiltre && DateLocationMois <= DateFinFiltre)
                     {
-                        retour +=(decimal) l.Montant!;
-                    }
-                    else if (DateDebutFiltre < DateLocationMois && DateLocationMois < DateFinFiltre)
-                    {
-                        retour += ((decimal) l.Montant!) * ((decimal) location.IdbienNavigation!.IdtypebienNavigation!.Commission!)/100;
+                        if (DateDebutLocation == DateLocationMois)
+                        {
+                            retour += (decimal)l.Montant!;
+                        }
+                        else
+                        {
+                            retour += ((decimal)l.Montant!) * ((decimal)location.IdbienNavigation!.IdtypebienNavigation!.Commission!) / 100;
+                        }
                     }
                 }
 
@@ -250,10 +270,10 @@ namespace EvaluationClasse
             {
                 if(annee.Key >=  debut.Year && annee.Key <= fin.Year && debut.Year == fin.Year)
                 {
-                    retour.Add(annee.Key,new Dictionary<int, Dictionary<string, decimal>>{ }) ;
+                    retour.Add(annee.Key,[]) ;
 					foreach (var mois in listemois[annee.Key])
 					{
-                        DateOnly DebutMoisAnnee = new DateOnly(annee.Key, mois.Key, 1);
+                        DateOnly DebutMoisAnnee = new(annee.Key, mois.Key, 1);
                         if(DebutMoisAnnee >= debut && DebutMoisAnnee <= fin)
                         {
                             retour[annee.Key].Add(mois.Key, listemois[annee.Key][mois.Key]);
